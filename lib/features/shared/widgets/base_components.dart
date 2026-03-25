@@ -62,6 +62,7 @@ class AppButton extends StatelessWidget {
   final bool isSecondary;
 
   final IconData? icon;
+  final bool isFullWidth;
 
   const AppButton({
     super.key,
@@ -71,6 +72,7 @@ class AppButton extends StatelessWidget {
     this.isLoading = false,
     this.isSecondary = false,
     this.icon,
+    this.isFullWidth = false,
   });
 
   @override
@@ -79,6 +81,7 @@ class AppButton extends StatelessWidget {
 
     return SizedBox(
       height: 48,
+      width: isFullWidth ? double.infinity : null,
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
@@ -86,7 +89,7 @@ class AppButton extends StatelessWidget {
           foregroundColor: Colors.white,
           elevation: isSecondary ? 0 : 8,
           shadowColor: isSecondary ? Colors.transparent : primaryColor.withOpacity(0.5),
-          side: isSecondary ? BorderSide(color: Colors.white.withOpacity(0.12)) : null,
+          side: isSecondary ? BorderSide(color: Theme.of(context).dividerColor.withOpacity(0.12)) : null,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
@@ -98,7 +101,8 @@ class AppButton extends StatelessWidget {
                 child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
               )
             : Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (icon != null) ...[
                     Icon(icon, size: 18),

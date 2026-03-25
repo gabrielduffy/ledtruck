@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../shared/widgets/base_components.dart';
-import '../models/dispositivo_model.dart';
-import '../providers/dispositivos_provider.dart';
+import 'package:led_truck/features/shared/widgets/base_components.dart';
+import 'package:led_truck/features/admin/models/dispositivo_model.dart';
+import 'package:led_truck/features/admin/providers/dispositivos_provider.dart';
 
 class ModalVincularCarro extends ConsumerStatefulWidget {
   final AdminDispositivo dispositivo;

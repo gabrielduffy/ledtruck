@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../shared/widgets/side_menu.dart';
-import '../../shared/widgets/notifications_drawer.dart';
-import '../../shared/widgets/base_components.dart';
-import '../../../core/theme/app_theme.dart';
-import '../../../core/theme/theme_provider.dart';
+import 'package:led_truck/features/shared/widgets/side_menu.dart';
+import 'package:led_truck/features/shared/widgets/notifications_drawer.dart';
+import 'package:led_truck/features/shared/widgets/base_components.dart';
+import 'package:led_truck/core/theme/app_theme.dart';
+import 'package:led_truck/core/theme/theme_provider.dart';
 
 class AdminRelatoriosScreen extends ConsumerStatefulWidget {
   const AdminRelatoriosScreen({super.key});

@@ -64,8 +64,13 @@ class SideMenu extends ConsumerWidget {
                   _MenuTile(label: "Campanhas", icon: Icons.campaign_outlined, path: "/franqueado/campanhas", isSelected: currentPath == "/franqueado/campanhas"),
                   _MenuTile(label: "Rastreamento", icon: Icons.map_outlined, path: "/franqueado/rastreamento", isSelected: currentPath.contains("/rastreamento")),
                   _MenuTile(label: "Configurações", icon: Icons.settings_outlined, path: "/admin/configuracoes", isSelected: currentPath == "/admin/configuracoes"),
+                ] else if (role == 'operador') ...[
+                  _MenuTile(label: "Dashboard", icon: Icons.dashboard_outlined, path: "/operador/dashboard", isSelected: currentPath == "/operador/dashboard"),
+                  _MenuTile(label: "Configurações", icon: Icons.settings_outlined, path: "/admin/configuracoes", isSelected: currentPath == "/admin/configuracoes"),
+                ] else if (role == 'anunciante') ...[
+                  _MenuTile(label: "Dashboard", icon: Icons.dashboard_outlined, path: "/anunciante/dashboard", isSelected: currentPath == "/anunciante/dashboard"),
+                  _MenuTile(label: "Relatórios", icon: Icons.bar_chart_outlined, path: "/anunciante/relatorios", isSelected: currentPath == "/anunciante/relatorios"),
                 ] else ...[
-                  // Outros roles
                   _MenuTile(label: "Dashboard", icon: Icons.dashboard_outlined, path: "/", isSelected: true),
                 ]
               ],

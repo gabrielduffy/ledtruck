@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../models/profile.dart';
+import 'package:led_truck/models/profile.dart';
 
 final supabaseProvider = Provider((ref) => Supabase.instance.client);
 

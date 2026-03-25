@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../shared/widgets/side_menu.dart';
-import '../../shared/widgets/notifications_drawer.dart';
-import '../../shared/widgets/base_components.dart';
-import '../../../core/theme/app_theme.dart';
-import '../../../core/theme/theme_provider.dart';
+import 'package:led_truck/features/shared/widgets/side_menu.dart';
+import 'package:led_truck/features/shared/widgets/notifications_drawer.dart';
+import 'package:led_truck/features/shared/widgets/base_components.dart';
+import 'package:led_truck/core/theme/app_theme.dart';
+import 'package:led_truck/core/theme/theme_provider.dart';
 
 class AdminConfiguracoesScreen extends ConsumerStatefulWidget {
   const AdminConfiguracoesScreen({super.key});
@@ -76,61 +76,74 @@ class _AdminConfiguracoesScreenState extends ConsumerState<AdminConfiguracoesScr
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          GridView.count(
-            crossAxisCount: MediaQuery.of(context).size.width > 1200 ? 3 : (MediaQuery.of(context).size.width > 800 ? 2 : 1),
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: 24,
-            crossAxisSpacing: 24,
-            childAspectRatio: 1.2,
-            children: [
-              _buildIntegracaoCard(
-                "E-mail (SMTP)",
-                "Envio de relatórios semanais e alertas.",
-                Icons.email,
-                true,
-                [
-                  const AppTextField(label: "Host SMTP", icon: Icons.lan),
-                  const SizedBox(height: 16),
-                  const AppTextField(label: "Porta", icon: Icons.numbers),
-                  const SizedBox(height: 16),
-                  const AppTextField(label: "Usuário", icon: Icons.person),
-                  const SizedBox(height: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text("Senha", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-                      const SizedBox(height: 8),
-                      TextField(obscureText: true, decoration: InputDecoration(hintText: "Senha SMTP", prefixIcon: const Icon(Icons.password), filled: true, fillColor: Theme.of(context).dialogBackgroundColor, border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)))),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  const AppTextField(label: "E-mail Remetente", icon: Icons.alternate_email),
-                ]
-              ),
-              _buildIntegracaoCard(
-                "WhatsApp (Z-API)",
-                "Notificações em tempo real para os clientes e franqueados.",
-                Icons.chat,
-                true,
-                [
-                  const AppTextField(label: "Instance ID", icon: Icons.api),
-                  const SizedBox(height: 16),
-                  const AppTextField(label: "Token", icon: Icons.vpn_key),
-                  const SizedBox(height: 16),
-                  const AppTextField(label: "Número do Bot", icon: Icons.phone),
-                ]
-              ),
-              _buildIntegracaoCard(
-                "Webhook",
-                "Envie eventos para sistemas externos",
-                Icons.webhook,
-                false,
-                [],
-                disabled: true
-              ),
-            ],
-          ),
+          LayoutBuilder(builder: (context, constraints) {
+            int cols = constraints.maxWidth > 1200 ? 3 : (constraints.maxWidth > 800 ? 2 : 1);
+            return GridView.count(
+              crossAxisCount: cols,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 24,
+              crossAxisSpacing: 24,
+              childAspectRatio: constraints.maxWidth > 1200 ? 1.2 : 1.4,
+              children: [
+                _buildIntegracaoCard(
+                  "E-mail (SMTP)",
+                  "Envio de relatórios semanais e alertas.",
+                  Icons.email,
+                  true,
+                  [
+                    const AppTextField(label: "Host SMTP", icon: Icons.lan),
+                    const SizedBox(height: 16),
+                    const AppTextField(label: "Porta", icon: Icons.numbers),
+                    const SizedBox(height: 16),
+                    const AppTextField(label: "Usuário", icon: Icons.person),
+                    const SizedBox(height: 16),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Senha", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500)),
+                        const SizedBox(height: 8),
+                        TextField(
+                          obscureText: true, 
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          decoration: InputDecoration(
+                            hintText: "Senha SMTP", 
+                            prefixIcon: const Icon(Icons.password), 
+                            filled: true, 
+                            fillColor: Theme.of(context).cardColor, 
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: Theme.of(context).dividerColor.withOpacity(0.1)))
+                          )
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    const AppTextField(label: "E-mail Remetente", icon: Icons.alternate_email),
+                  ]
+                ),
+                _buildIntegracaoCard(
+                  "WhatsApp (Z-API)",
+                  "Notificações em tempo real para os clientes e franqueados.",
+                  Icons.chat,
+                  true,
+                  [
+                    const AppTextField(label: "Instance ID", icon: Icons.api),
+                    const SizedBox(height: 16),
+                    const AppTextField(label: "Token", icon: Icons.vpn_key),
+                    const SizedBox(height: 16),
+                    const AppTextField(label: "Número do Bot", icon: Icons.phone),
+                  ]
+                ),
+                _buildIntegracaoCard(
+                  "Webhook",
+                  "Envie eventos para sistemas externos",
+                  Icons.webhook,
+                  false,
+                  [],
+                  disabled: true
+                ),
+              ],
+            );
+          }),
         ],
       ),
     );
@@ -199,14 +212,14 @@ class _AdminConfiguracoesScreenState extends ConsumerState<AdminConfiguracoesScr
                       children: [
                         Column(
                           children: [
-                            AppTextField(label: "Assunto do E-mail", icon: Icons.title),
-                            SizedBox(height: 16),
+                            const AppTextField(label: "Assunto do E-mail", icon: Icons.title),
+                            const SizedBox(height: 16),
                              Expanded(child: Column(
                                crossAxisAlignment: CrossAxisAlignment.start,
                                children: [
-                                 const Text("Corpo HTML", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                                 Text("Corpo HTML", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500)),
                                  const SizedBox(height: 8),
-                                 Expanded(child: TextField(maxLines: 5, decoration: InputDecoration(hintText: "HTML aqui...", prefixIcon: const Icon(Icons.code), filled: true, fillColor: const Color(0xFF0D0D14), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))))),
+                                 Expanded(child: TextField(maxLines: 5, style: Theme.of(context).textTheme.bodyMedium, decoration: InputDecoration(hintText: "HTML aqui...", prefixIcon: const Icon(Icons.code), filled: true, fillColor: Theme.of(context).cardColor, border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: Theme.of(context).dividerColor.withOpacity(0.1)))))),
                                ],
                              )),
                           ],
@@ -216,9 +229,9 @@ class _AdminConfiguracoesScreenState extends ConsumerState<AdminConfiguracoesScr
                              Expanded(child: Column(
                                crossAxisAlignment: CrossAxisAlignment.start,
                                children: [
-                                 const Text("Mensagem WhatsApp (Markdown)", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                                 Text("Mensagem WhatsApp (Markdown)", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500)),
                                  const SizedBox(height: 8),
-                                 Expanded(child: TextField(maxLines: 6, decoration: InputDecoration(hintText: "Mensagem aqui...", prefixIcon: const Icon(Icons.message), filled: true, fillColor: const Color(0xFF0D0D14), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))))),
+                                 Expanded(child: TextField(maxLines: 6, style: Theme.of(context).textTheme.bodyMedium, decoration: InputDecoration(hintText: "Mensagem aqui...", prefixIcon: const Icon(Icons.message), filled: true, fillColor: Theme.of(context).cardColor, border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: Theme.of(context).dividerColor.withOpacity(0.1)))))),
                                ],
                              )),
                           ],
@@ -472,13 +485,18 @@ class _AdminConfiguracoesScreenState extends ConsumerState<AdminConfiguracoesScr
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildAbaIntegracoes(),
-          _buildAbaTemplates(),
-          _buildAbaLogs(),
-        ],
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1400),
+          child: TabBarView(
+            controller: _tabController,
+            children: [
+              _buildAbaIntegracoes(),
+              _buildAbaTemplates(),
+              _buildAbaLogs(),
+            ],
+          ),
+        ),
       ),
     );
   }

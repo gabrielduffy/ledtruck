@@ -44,173 +44,94 @@ class FranqueadoDashboardScreen extends ConsumerWidget {
           const SizedBox(width: 16),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // CARDS
-            LayoutBuilder(builder: (context, constraints) {
-              int cols = constraints.maxWidth > 1200 ? 4 : (constraints.maxWidth > 800 ? 2 : 1);
-              return GridView.count(
-                crossAxisCount: cols,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: 24,
-                crossAxisSpacing: 24,
-                childAspectRatio: 2.5,
-                children: [
-                  _MetricCard(title: "Horas exibidas hoje", value: "24h 30m", icon: Icons.timer, color: AppTheme.primaryNeon),
-                  _MetricCard(title: "Horas exibidas no mês", value: "720h", icon: Icons.calendar_month, color: AppTheme.primaryNeon),
-                  _MetricCard(title: "Carros ativos agora", value: "8 / 10", icon: Icons.directions_car, color: Colors.green),
-                  _MetricCard(title: "Campanhas ativas", value: "15", icon: Icons.campaign, color: Colors.blue),
-                ],
-              );
-            }),
-            const SizedBox(height: 32),
-            
-            // GRAFICO & BOTOES RAPIDOS
-            Row(
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1400),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  flex: 3,
-                  child: AppCard(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
+                // CARDS
+                LayoutBuilder(builder: (context, constraints) {
+                  int cols = constraints.maxWidth > 1200 ? 4 : (constraints.maxWidth > 800 ? 2 : 1);
+                  return GridView.count(
+                    crossAxisCount: cols,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    mainAxisSpacing: 24,
+                    crossAxisSpacing: 24,
+                    childAspectRatio: constraints.maxWidth > 1200 ? 2.5 : 3.0,
+                    children: [
+                      _MetricCard(title: "Horas exibidas hoje", value: "24h 30m", icon: Icons.timer, color: AppTheme.primaryNeon),
+                      _MetricCard(title: "Horas exibidas no mês", value: "720h", icon: Icons.calendar_month, color: AppTheme.primaryNeon),
+                      const _MetricCard(title: "Carros ativos agora", value: "8 / 10", icon: Icons.directions_car, color: Colors.green),
+                      const _MetricCard(title: "Campanhas ativas", value: "15", icon: Icons.campaign, color: Colors.blue),
+                    ],
+                  );
+                }),
+            const SizedBox(height: 32),
+            
+                // GRAFICO & BOTOES RAPIDOS
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isDesktop = constraints.maxWidth > 1000;
+                    return isDesktop 
+                    ? Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Horas Exibidas (Últimos dias)", style: Theme.of(context).textTheme.headlineMedium),
-                            DropdownButton<String>(
-                              dropdownColor: Theme.of(context).cardColor,
-                              value: "7 dias",
-                              items: const [DropdownMenuItem(value: "7 dias", child: Text("7 dias")), DropdownMenuItem(value: "30 dias", child: Text("30 dias"))],
-                              onChanged: (val) {},
-                              style: TextStyle(color: AppTheme.primaryNeon),
-                            )
-                          ],
+                        Expanded(
+                          flex: 3,
+                          child: _buildChart(context),
                         ),
-                        const SizedBox(height: 32),
-                        SizedBox(
-                          height: 300,
-                          child: BarChart(
-                            BarChartData(
-                              alignment: BarChartAlignment.spaceAround,
-                              maxY: 40,
-                              barTouchData: BarTouchData(enabled: true),
-                              titlesData: FlTitlesData(
-                                show: true,
-                                bottomTitles: AxisTitles(
-                                  sideTitles: SideTitles(
-                                    showTitles: true,
-                                    getTitlesWidget: (val, meta) {
-                                      const dias = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
-                                      return Padding(padding: const EdgeInsets.only(top: 8), child: Text(dias[val.toInt()], style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color, fontSize: 12)));
-                                    },
-                                  ),
-                                ),
-                                leftTitles: AxisTitles(
-                                  sideTitles: SideTitles(
-                                    showTitles: true,
-                                    reservedSize: 40,
-                                    interval: 10,
-                                    getTitlesWidget: (val, meta) => Text('${val}h', style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color, fontSize: 12)),
-                                  ),
-                                ),
-                                topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                              ),
-                              gridData: FlGridData(
-                                show: true,
-                                drawVerticalLine: false,
-                                horizontalInterval: 10,
-                                getDrawingHorizontalLine: (value) => FlLine(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.1), strokeWidth: 1),
-                              ),
-                              borderData: FlBorderData(show: false),
-                              barGroups: [
-                                _makeBarData(0, 24),
-                                _makeBarData(1, 30),
-                                _makeBarData(2, 35),
-                                _makeBarData(3, 28),
-                                _makeBarData(4, 38),
-                                _makeBarData(5, 12),
-                                _makeBarData(6, 18),
-                              ],
-                            ),
-                          ),
+                        const SizedBox(width: 24),
+                        Expanded(
+                          flex: 1,
+                          child: _buildQuickActions(context),
                         ),
                       ],
-                    ),
-                  ),
+                    )
+                    : Column(
+                      children: [
+                        _buildChart(context),
+                        const SizedBox(height: 24),
+                        _buildQuickActions(context),
+                      ],
+                    );
+                  }
                 ),
-                const SizedBox(width: 24),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    children: [
-                      AppCard(
-                        padding: const EdgeInsets.all(24),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Text("Ações Rápidas", style: Theme.of(context).textTheme.headlineMedium),
-                            const SizedBox(height: 24),
-                            AppButton(
-                              label: "Nova Campanha",
-                              icon: Icons.add_circle,
-                              onPressed: () {
-                                _openNovaCampanhaModal(context);
-                              },
-                            ),
-                            const SizedBox(height: 16),
-                            AppButton(
-                              label: "Gerenciar Operadores",
-                              icon: Icons.people,
-                              onPressed: () {
-                                _openGerenciarOperadoresModal(context);
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                const SizedBox(height: 32),
+                
+                // TABELA DE CARROS (RESUMO)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Meus Carros Ativos", style: Theme.of(context).textTheme.headlineMedium),
+                    TextButton(onPressed: () => context.go('/franqueado/carros'), child: const Text("Ver Todos", style: TextStyle(color: AppTheme.primaryNeon))),
+                  ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 32),
-
-            // TABELA DE CARROS (RESUMO)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Meus Carros Ativos", style: Theme.of(context).textTheme.headlineMedium),
-                TextButton(onPressed: () => context.go('/franqueado/carros'), child: const Text("Ver Todos", style: TextStyle(color: AppTheme.primaryNeon))),
-              ],
-            ),
             const SizedBox(height: 16),
             AppCard(
-              padding: const EdgeInsets.all(0),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  headingTextStyle: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5), fontWeight: FontWeight.bold),
-                  dataTextStyle: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
-                  columns: const [
-                    DataColumn(label: Text("Código")),
-                    DataColumn(label: Text("Placa")),
-                    DataColumn(label: Text("Status")),
-                    DataColumn(label: Text("Operador")),
-                    DataColumn(label: Text("Tempo hoje")),
-                    DataColumn(label: Text("Ações")),
-                  ],
-                  rows: [
-                    _carroRow(context, "LT-001", "ABC-1234", "Online", "João Silva", "4h 30m"),
-                    _carroRow(context, "LT-002", "XYZ-9876", "Offline", "Maria", "2h 10m"),
-                  ],
+              padding: EdgeInsets.zero,
+              child: SizedBox(
+                width: double.infinity,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    columnSpacing: 24,
+                    columns: [
+                      DataColumn(label: Text("Código", style: Theme.of(context).textTheme.bodySmall)),
+                      DataColumn(label: Text("Placa", style: Theme.of(context).textTheme.bodySmall)),
+                      DataColumn(label: Text("Status", style: Theme.of(context).textTheme.bodySmall)),
+                      DataColumn(label: Text("Operador", style: Theme.of(context).textTheme.bodySmall)),
+                      DataColumn(label: Text("Tempo hoje", style: Theme.of(context).textTheme.bodySmall)),
+                      DataColumn(label: Text("Ações", style: Theme.of(context).textTheme.bodySmall)),
+                    ],
+                    rows: [
+                      _carroRow(context, "LT-001", "ABC-1234", "Online", "João Silva", "4h 30m"),
+                      _carroRow(context, "LT-002", "XYZ-9876", "Offline", "Maria", "2h 10m"),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -226,28 +147,136 @@ class FranqueadoDashboardScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             AppCard(
-              padding: const EdgeInsets.all(0),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  headingTextStyle: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5), fontWeight: FontWeight.bold),
-                  dataTextStyle: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
-                  columns: const [
-                    DataColumn(label: Text("Anunciante")),
-                    DataColumn(label: Text("Período")),
-                    DataColumn(label: Text("Progresso")),
-                    DataColumn(label: Text("Horas (Exibidas/Contratadas)")),
-                    DataColumn(label: Text("Carros Alocados")),
-                  ],
-                  rows: [
-                    _campanhaRow(context, "Coca-Cola", "01/03 a 31/03", 0.75, "75h / 100h", 4),
-                    _campanhaRow(context, "McDonald's", "10/03 a 20/03", 0.90, "90h / 100h", 2),
-                  ],
+              padding: EdgeInsets.zero,
+              child: SizedBox(
+                width: double.infinity,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    columnSpacing: 24,
+                    columns: [
+                      DataColumn(label: Text("Anunciante", style: Theme.of(context).textTheme.bodySmall)),
+                      DataColumn(label: Text("Período", style: Theme.of(context).textTheme.bodySmall)),
+                      DataColumn(label: Text("Progresso", style: Theme.of(context).textTheme.bodySmall)),
+                      DataColumn(label: Text("Horas (Exibidas/Contratadas)", style: Theme.of(context).textTheme.bodySmall)),
+                      DataColumn(label: Text("Carros Alocados", style: Theme.of(context).textTheme.bodySmall)),
+                    ],
+                    rows: [
+                      _campanhaRow(context, "Coca-Cola", "01/03 a 31/03", 0.75, "75h / 100h", 4),
+                      _campanhaRow(context, "McDonald's", "10/03 a 20/03", 0.90, "90h / 100h", 2),
+                    ],
+                  ),
                 ),
               ),
-            )
-          ],
+            ),
+            const SizedBox(height: 32),
+              ],
+            ),
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildChart(BuildContext context) {
+    return AppCard(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Horas Exibidas (Últimos dias)", style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 18)),
+              DropdownButton<String>(
+                dropdownColor: Theme.of(context).cardColor,
+                value: "7 dias",
+                items: const [DropdownMenuItem(value: "7 dias", child: Text("7 dias")), DropdownMenuItem(value: "30 dias", child: Text("30 dias"))],
+                onChanged: (val) {},
+                style: const TextStyle(color: AppTheme.primaryNeon),
+                underline: Container(),
+              )
+            ],
+          ),
+          const SizedBox(height: 32),
+          SizedBox(
+            height: 300,
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceAround,
+                maxY: 40,
+                barTouchData: BarTouchData(enabled: true),
+                titlesData: FlTitlesData(
+                  show: true,
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (val, meta) {
+                        const dias = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+                        if (val.toInt() >= dias.length) return Container();
+                        return Padding(padding: const EdgeInsets.only(top: 8), child: Text(dias[val.toInt()], style: Theme.of(context).textTheme.bodySmall));
+                      },
+                    ),
+                  ),
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 40,
+                      interval: 10,
+                      getTitlesWidget: (val, meta) => Text('${val.toInt()}h', style: Theme.of(context).textTheme.bodySmall),
+                    ),
+                  ),
+                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                ),
+                gridData: FlGridData(
+                  show: true,
+                  drawVerticalLine: false,
+                  horizontalInterval: 10,
+                  getDrawingHorizontalLine: (value) => FlLine(color: Theme.of(context).dividerColor.withOpacity(0.1), strokeWidth: 1),
+                ),
+                borderData: FlBorderData(show: false),
+                barGroups: [
+                  _makeBarData(0, 24),
+                  _makeBarData(1, 30),
+                  _makeBarData(2, 35),
+                  _makeBarData(3, 28),
+                  _makeBarData(4, 38),
+                  _makeBarData(5, 12),
+                  _makeBarData(6, 18),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickActions(BuildContext context) {
+    return AppCard(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text("Ações Rápidas", style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 18)),
+          const SizedBox(height: 24),
+          AppButton(
+            label: "Nova Campanha",
+            icon: Icons.add_circle,
+            onPressed: () {
+              _openNovaCampanhaModal(context);
+            },
+          ),
+          const SizedBox(height: 16),
+          AppButton(
+            label: "Gerenciar Operadores",
+            icon: Icons.people,
+            onPressed: () {
+              _openGerenciarOperadoresModal(context);
+            },
+          ),
+        ],
       ),
     );
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:led_truck/core/theme/app_theme.dart';
 
 class StatusChip extends StatefulWidget {
   final String status;

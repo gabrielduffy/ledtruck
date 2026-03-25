@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import '../models/dispositivo_model.dart';
-import '../providers/dispositivos_provider.dart';
+import 'package:led_truck/features/admin/models/dispositivo_model.dart';
+import 'package:led_truck/features/admin/providers/dispositivos_provider.dart';
 
 class ModalHistoricoDispositivo extends ConsumerWidget {
   final AdminDispositivo dispositivo;

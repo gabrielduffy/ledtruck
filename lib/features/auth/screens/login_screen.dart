@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../providers/auth_provider.dart';
-import '../../shared/widgets/base_components.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:led_truck/features/auth/providers/auth_provider.dart';
+import 'package:led_truck/features/shared/widgets/base_components.dart';
+import 'package:led_truck/core/theme/app_theme.dart';
 
 class AnimatedGridBackground extends StatefulWidget {
   const AnimatedGridBackground({super.key});
@@ -188,13 +188,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    SizedBox(
-                      width: double.infinity,
-                      child: AppButton(
-                        label: "MODO TESTE (ADMIN)",
-                        isSecondary: true,
-                        onPressed: () => context.go('/admin/dashboard'),
-                      ),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        _buildTestButton(context, "ADMIN", "/admin/dashboard"),
+                        _buildTestButton(context, "FRANQUEADO", "/franqueado/dashboard"),
+                        _buildTestButton(context, "OPERADOR", "/operador/dashboard"),
+                        _buildTestButton(context, "ANUNCIANTE", "/anunciante/dashboard"),
+                      ],
                     ),
                     const SizedBox(height: 16),
                     
@@ -211,6 +213,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTestButton(BuildContext context, String label, String path) {
+    return SizedBox(
+      width: 170,
+      height: 40,
+      child: AppButton(
+        label: label,
+        isSecondary: true,
+        onPressed: () => context.go(path),
       ),
     );
   }

@@ -12,6 +12,9 @@ import 'package:led_truck/features/admin/screens/admin_configuracoes_screen.dart
 import 'package:led_truck/features/franqueado/screens/franqueado_dashboard_screen.dart';
 import 'package:led_truck/features/franqueado/screens/franqueado_carros_screen.dart';
 import 'package:led_truck/features/franqueado/screens/franqueado_campanhas_screen.dart';
+import 'package:led_truck/features/operador/screens/operador_dashboard_screen.dart';
+import 'package:led_truck/features/anunciante/screens/anunciante_dashboard_screen.dart';
+import 'package:led_truck/features/admin/screens/carro_detalhes_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authStateProvider);
@@ -27,8 +30,13 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       // 1. Não logado -> Redireciona para login (Ignorado se estiver em modo teste mockado)
       if (session == null) {
-        // Para fins de teste sem Supabase, permitimos avançar se o path for /admin
-        if (state.matchedLocation.startsWith('/admin')) return null;
+        // Permitimos avançar se o path for de qualquer role (modo teste)
+        final loc = state.matchedLocation;
+        if (loc.startsWith('/admin') || 
+            loc.startsWith('/franqueado') || 
+            loc.startsWith('/operador') || 
+            loc.startsWith('/anunciante') ||
+            loc.startsWith('/carro')) return null;
         return isLoggingIn ? null : '/login';
       }
 
@@ -96,11 +104,15 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/operador/dashboard',
-        builder: (context, state) => const Scaffold(body: Center(child: Text("Operador Dashboard"))),
+        builder: (context, state) => const OperadorDashboardScreen(),
       ),
       GoRoute(
         path: '/anunciante/dashboard',
-        builder: (context, state) => const Scaffold(body: Center(child: Text("Anunciante Dashboard"))),
+        builder: (context, state) => const AnuncianteDashboardScreen(),
+      ),
+      GoRoute(
+        path: '/carro/:id',
+        builder: (context, state) => CarroDetalhesScreen(id: state.pathParameters['id'] ?? '0'),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(

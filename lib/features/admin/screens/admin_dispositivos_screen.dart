@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import '../../shared/widgets/base_components.dart';
-import '../../shared/widgets/side_menu.dart';
-import '../../shared/widgets/notifications_drawer.dart';
-import '../../../core/theme/app_theme.dart';
-import '../../../core/theme/theme_provider.dart';
-import '../providers/dispositivos_provider.dart';
-import '../models/dispositivo_model.dart';
-import '../widgets/modal_cadastrar_dispositivo.dart';
-import '../widgets/modal_vincular_carro.dart';
-import '../widgets/modal_desvincular_dispositivo.dart';
-import '../widgets/modal_historico_dispositivo.dart';
+import 'package:led_truck/features/shared/widgets/base_components.dart';
+import 'package:led_truck/features/shared/widgets/side_menu.dart';
+import 'package:led_truck/features/shared/widgets/notifications_drawer.dart';
+import 'package:led_truck/core/theme/app_theme.dart';
+import 'package:led_truck/core/theme/theme_provider.dart';
+import 'package:led_truck/features/admin/providers/dispositivos_provider.dart';
+import 'package:led_truck/features/admin/models/dispositivo_model.dart';
+import 'package:led_truck/features/admin/widgets/modal_cadastrar_dispositivo.dart';
+import 'package:led_truck/features/admin/widgets/modal_vincular_carro.dart';
+import 'package:led_truck/features/admin/widgets/modal_desvincular_dispositivo.dart';
+import 'package:led_truck/features/admin/widgets/modal_historico_dispositivo.dart';
 
 class AdminDispositivosScreen extends ConsumerWidget {
   const AdminDispositivosScreen({super.key});
@@ -20,6 +20,7 @@ class AdminDispositivosScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final metrics = ref.watch(dispositivosMetricsProvider);
     final dispositivos = ref.watch(dispositivosProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -29,11 +30,10 @@ class AdminDispositivosScreen extends ConsumerWidget {
         title: Text("GESTÃO DE DISPOSITIVOS", style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontSize: 20)),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: IconThemeData(color: Theme.of(context).textTheme.bodyLarge?.color),
         actions: [
           IconButton(
             icon: Icon(
-              Theme.of(context).brightness == Brightness.dark ? Icons.light_mode : Icons.dark_mode,
+              isDark ? Icons.light_mode : Icons.dark_mode,
               color: AppTheme.primaryNeon,
             ),
             onPressed: () => ref.read(themeProvider.notifier).toggleTheme(),
@@ -52,119 +52,144 @@ class AdminDispositivosScreen extends ConsumerWidget {
           const SizedBox(width: 16),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // CARDS DE MÉTRICAS
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 300,
-                mainAxisExtent: 100,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-              ),
-              itemCount: metrics.length,
-              itemBuilder: (context, index) {
-                final metric = metrics[index];
-                final iconColor = Color(int.parse(metric.colorHex, radix: 16) + 0xFF000000);
-                return AppCard(
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: iconColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(_getIcon(metric.icon), color: iconColor),
-                      ),
-                      const SizedBox(width: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(metric.label, style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5), fontSize: 12)),
-                          Text(metric.value, style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: 18, fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: 32),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1400),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("DISPOSITIVOS", style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color, fontWeight: FontWeight.bold)),
-                AppButton(
-                  label: "Cadastrar Dispositivo",
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      backgroundColor: const Color(0xFF12121A),
-                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-                      builder: (_) => const ModalCadastrarDispositivo(),
+                // CARDS DE MÉTRICAS
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    int crossAxisCount = constraints.maxWidth > 1200 ? 4 : (constraints.maxWidth > 800 ? 2 : 1);
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        mainAxisExtent: 100,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                      ),
+                      itemCount: metrics.length,
+                      itemBuilder: (context, index) {
+                        final metric = metrics[index];
+                        final iconColor = Color(int.parse(metric.colorHex, radix: 16) + 0xFF000000);
+                        return AppCard(
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: iconColor.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Icon(_getIcon(metric.icon), color: iconColor, size: 24),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(metric.label, style: Theme.of(context).textTheme.bodySmall),
+                                    const SizedBox(height: 4),
+                                    Text(metric.value, style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 22)),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     );
                   },
                 ),
+                const SizedBox(height: 32),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("DISPOSITIVOS", style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 18)),
+                    AppButton(
+                      label: "Cadastrar Dispositivo",
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: isDark ? const Color(0xFF12121A) : Colors.white,
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+                          builder: (_) => const ModalCadastrarDispositivo(),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                AppCard(
+                  padding: EdgeInsets.zero,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        columnSpacing: 24,
+                        columns: [
+                          DataColumn(label: Text("Nº Série", style: Theme.of(context).textTheme.bodySmall)),
+                          DataColumn(label: Text("Modelo", style: Theme.of(context).textTheme.bodySmall)),
+                          DataColumn(label: Text("Firmware", style: Theme.of(context).textTheme.bodySmall)),
+                          DataColumn(label: Text("Status", style: Theme.of(context).textTheme.bodySmall)),
+                          DataColumn(label: Text("Carro Vinculado", style: Theme.of(context).textTheme.bodySmall)),
+                          DataColumn(label: Text("Franqueado", style: Theme.of(context).textTheme.bodySmall)),
+                          DataColumn(label: Text("Instalado em", style: Theme.of(context).textTheme.bodySmall)),
+                          DataColumn(label: Text("Ações", style: Theme.of(context).textTheme.bodySmall)),
+                        ],
+                        rows: dispositivos.map((d) {
+                          return DataRow(
+                            cells: [
+                              DataCell(Text(d.numeroSerie, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold))),
+                              DataCell(Text(d.modelo, style: Theme.of(context).textTheme.bodyMedium)),
+                              DataCell(Text(d.versaoFirmware, style: Theme.of(context).textTheme.bodyMedium)),
+                              DataCell(_buildStatusBadge(d.status)),
+                              DataCell(Text(d.carroVinculado ?? '-', style: Theme.of(context).textTheme.bodyMedium)),
+                              DataCell(Text(d.franqueadoNome ?? '-', style: Theme.of(context).textTheme.bodyMedium)),
+                              DataCell(Text(d.instaladoEm != null ? DateFormat('dd/MM/yyyy').format(d.instaladoEm!) : '-', style: Theme.of(context).textTheme.bodyMedium)),
+                              DataCell(
+                                PopupMenuButton<String>(
+                                  icon: const Icon(Icons.more_vert),
+                                  color: isDark ? const Color(0xFF1A1A26) : Colors.white,
+                                  onSelected: (action) => _handleAction(context, action, d),
+                                  itemBuilder: (context) => [
+                                    if (d.status == 'estoque' || d.status == 'manutencao')
+                                      PopupMenuItem(
+                                        value: 'vincular',
+                                        child: Text('Vincular a Carro', style: TextStyle(color: isDark ? Colors.white : const Color(0xFF0D0D1A))),
+                                      ),
+                                    if (d.status == 'instalado')
+                                      const PopupMenuItem(
+                                        value: 'desvincular',
+                                        child: Text('Desvincular', style: TextStyle(color: Colors.redAccent)),
+                                      ),
+                                    PopupMenuItem(
+                                      value: 'historico',
+                                      child: Text('Ver Histórico', style: TextStyle(color: isDark ? Colors.white : const Color(0xFF0D0D1A))),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
-            const SizedBox(height: 16),
-
-            AppCard(
-              padding: EdgeInsets.zero,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  columnSpacing: 24,
-                  columns: const [
-                    DataColumn(label: Text("Nº Série", style: TextStyle(color: Color(0xFF7A7A9A)))),
-                    DataColumn(label: Text("Modelo", style: TextStyle(color: Color(0xFF7A7A9A)))),
-                    DataColumn(label: Text("Firmware", style: TextStyle(color: Color(0xFF7A7A9A)))),
-                    DataColumn(label: Text("Status", style: TextStyle(color: Color(0xFF7A7A9A)))),
-                    DataColumn(label: Text("Carro Vinculado", style: TextStyle(color: Color(0xFF7A7A9A)))),
-                    DataColumn(label: Text("Franqueado", style: TextStyle(color: Color(0xFF7A7A9A)))),
-                    DataColumn(label: Text("Instalado em", style: TextStyle(color: Color(0xFF7A7A9A)))),
-                    DataColumn(label: Text("Ações", style: TextStyle(color: Color(0xFF7A7A9A)))),
-                  ],
-                  rows: dispositivos.map((d) {
-                    return DataRow(
-                      cells: [
-                        DataCell(Text(d.numeroSerie, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
-                        DataCell(Text(d.modelo, style: const TextStyle(color: Colors.white))),
-                        DataCell(Text(d.versaoFirmware, style: const TextStyle(color: Colors.white))),
-                        DataCell(_buildStatusBadge(d.status)),
-                        DataCell(Text(d.carroVinculado ?? '-', style: const TextStyle(color: Colors.white))),
-                        DataCell(Text(d.franqueadoNome ?? '-', style: const TextStyle(color: Colors.white))),
-                        DataCell(Text(d.instaladoEm != null ? DateFormat('dd/MM/yyyy').format(d.instaladoEm!) : '-', style: const TextStyle(color: Colors.white))),
-                        DataCell(
-                          PopupMenuButton<String>(
-                            icon: const Icon(Icons.more_vert, color: Color(0xFF7A7A9A)),
-                            color: const Color(0xFF1A1A26),
-                            onSelected: (action) => _handleAction(context, action, d),
-                            itemBuilder: (context) => [
-                              if (d.status == 'estoque' || d.status == 'manutencao')
-                                const PopupMenuItem(value: 'vincular', child: Text('Vincular a Carro', style: TextStyle(color: Colors.white))),
-                              if (d.status == 'instalado')
-                                const PopupMenuItem(value: 'desvincular', child: Text('Desvincular', style: TextStyle(color: Colors.redAccent))),
-                              const PopupMenuItem(value: 'historico', child: Text('Ver Histórico', style: TextStyle(color: Colors.white))),
-                            ],
-                          ),
-                        ),
-                      ],
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -200,11 +225,14 @@ class AdminDispositivosScreen extends ConsumerWidget {
   }
 
   void _handleAction(BuildContext context, String action, AdminDispositivo d) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final modalBg = isDark ? const Color(0xFF12121A) : Colors.white;
+
     if (action == 'vincular') {
       showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        backgroundColor: const Color(0xFF12121A),
+        backgroundColor: modalBg,
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
         builder: (_) => ModalVincularCarro(dispositivo: d),
       );
@@ -212,14 +240,14 @@ class AdminDispositivosScreen extends ConsumerWidget {
       showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        backgroundColor: const Color(0xFF12121A),
+        backgroundColor: modalBg,
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
         builder: (_) => ModalDesvincularDispositivo(dispositivo: d),
       );
     } else if (action == 'historico') {
       showModalBottomSheet(
         context: context,
-        backgroundColor: const Color(0xFF12121A),
+        backgroundColor: modalBg,
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
         builder: (_) => ModalHistoricoDispositivo(dispositivo: d),
       );

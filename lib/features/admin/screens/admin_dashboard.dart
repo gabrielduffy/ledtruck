@@ -3,15 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // Imports do mapa removidos temporariamente
 // import 'package:flutter_map/flutter_map.dart';
 // import 'package:latlong2/latlong2.dart';
-import '../../shared/widgets/base_components.dart';
-import '../../shared/widgets/side_menu.dart';
-import '../../shared/widgets/status_chip.dart';
-import '../../shared/widgets/skeleton_loader.dart';
-import '../../shared/widgets/notifications_drawer.dart';
-import '../../../core/theme/app_theme.dart';
-import '../../../core/theme/theme_provider.dart';
-import '../providers/admin_provider.dart';
-import '../models/admin_models.dart';
+import 'package:led_truck/features/shared/widgets/base_components.dart';
+import 'package:led_truck/features/shared/widgets/side_menu.dart';
+import 'package:led_truck/features/shared/widgets/status_chip.dart';
+import 'package:led_truck/features/shared/widgets/skeleton_loader.dart';
+import 'package:led_truck/features/shared/widgets/notifications_drawer.dart';
+import 'package:led_truck/core/theme/app_theme.dart';
+import 'package:led_truck/core/theme/theme_provider.dart';
+import 'package:led_truck/features/admin/providers/admin_provider.dart';
+import 'package:led_truck/features/admin/models/admin_models.dart';
 
 class AdminDashboard extends ConsumerWidget {
   const AdminDashboard({super.key});
@@ -20,8 +20,8 @@ class AdminDashboard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final metrics = ref.watch(adminMetricsProvider);
     final franqueados = ref.watch(franqueadosProvider);
-    final carros = ref.watch(carrosMapaProvider);
     final eventsAsync = ref.watch(eventsStreamProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -34,7 +34,7 @@ class AdminDashboard extends ConsumerWidget {
         actions: [
           IconButton(
             icon: Icon(
-              Theme.of(context).brightness == Brightness.dark ? Icons.light_mode : Icons.dark_mode,
+              isDark ? Icons.light_mode : Icons.dark_mode,
               color: AppTheme.primaryNeon,
             ),
             onPressed: () => ref.read(themeProvider.notifier).toggleTheme(),
@@ -53,105 +53,125 @@ class AdminDashboard extends ConsumerWidget {
           const SizedBox(width: 16),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 1. CARDS DE MÉTRICAS
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 300,
-                mainAxisExtent: 100,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-              ),
-              itemCount: metrics.length,
-              itemBuilder: (context, index) {
-                final metric = metrics[index];
-                return AppCard(
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF00E87A).withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(_getIcon(metric.icon), color: AppTheme.primaryNeon),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1400),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 1. CARDS DE MÉTRICAS - GRID RESPONSIVO
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    int crossAxisCount = constraints.maxWidth > 1200 ? 4 : (constraints.maxWidth > 800 ? 2 : 1);
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        mainAxisExtent: 100,
+                        crossAxisSpacing: 24,
+                        mainAxisSpacing: 24,
                       ),
-                      const SizedBox(width: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(metric.label, style: const TextStyle(color: Color(0xFF7A7A9A), fontSize: 12)),
-                          Text(metric.value, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: 32),
-
-            // 2. MAPA EM TEMPO REAL
-            const Text("MAPA EM TEMPO REAL", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            AppCard(
-              padding: EdgeInsets.zero,
-              height: 400,
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1A1A26),
-                  borderRadius: BorderRadius.circular(12),
+                      itemCount: metrics.length,
+                      itemBuilder: (context, index) {
+                        final metric = metrics[index];
+                        return AppCard(
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: AppTheme.primaryNeon.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Icon(_getIcon(metric.icon), color: AppTheme.primaryNeon, size: 24),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(metric.label, style: Theme.of(context).textTheme.bodySmall),
+                                    const SizedBox(height: 4),
+                                    Text(metric.value, style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 22)),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.map, color: AppTheme.primaryNeon, size: 48),
-                    SizedBox(height: 16),
-                    Text(
-                      "Mapa em tempo real — em breve",
-                      style: TextStyle(
-                        color: AppTheme.primaryNeon,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                const SizedBox(height: 32),
+
+                // 2. MAPA EM TEMPO REAL
+                Text("MAPA EM TEMPO REAL", style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 16)),
+                const SizedBox(height: 16),
+                AppCard(
+                  padding: EdgeInsets.zero,
+                  height: 400,
+                  width: double.infinity,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: isDark ? const Color(0xFF1A1A26) : const Color(0xFFF0F0F5),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  ],
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.map, color: AppTheme.primaryNeon, size: 48),
+                        const SizedBox(height: 16),
+                        Text(
+                          "Mapa em tempo real — em breve",
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            color: AppTheme.primaryNeon,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 32),
+                const SizedBox(height: 32),
 
-            // 3. TABELA DE FRANQUEADOS E FEED DE EVENTOS
-            LayoutBuilder(
-              builder: (context, constraints) {
-                final isDesktop = constraints.maxWidth > 900;
-                return isDesktop
-                    ? Row(
+                // 3. TABELA DE FRANQUEADOS E FEED DE EVENTOS - LAYOUT RESPONSIVO
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isDesktop = constraints.maxWidth > 1000;
+                    if (isDesktop) {
+                      return Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(flex: 2, child: _FranqueadosTable(franqueados: franqueados)),
-                          const SizedBox(width: 24),
-                          Expanded(flex: 1, child: _EventsFeed(eventsAsync: eventsAsync)),
+                          Expanded(
+                            flex: 6, // 60%
+                            child: _FranqueadosTable(franqueados: franqueados),
+                          ),
+                          const SizedBox(width: 32),
+                          Expanded(
+                            flex: 4, // 40%
+                            child: _EventsFeed(eventsAsync: eventsAsync),
+                          ),
                         ],
-                      )
-                    : Column(
+                      );
+                    } else {
+                      return Column(
                         children: [
                           _FranqueadosTable(franqueados: franqueados),
                           const SizedBox(height: 32),
                           _EventsFeed(eventsAsync: eventsAsync),
                         ],
                       );
-              },
+                    }
+                  },
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -168,9 +188,10 @@ class AdminDashboard extends ConsumerWidget {
   }
 
   void _showCarInfo(BuildContext context, AdminCarro carro) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
     showModalBottomSheet(
       context: context,
-      backgroundColor: const Color(0xFF12121A),
+      backgroundColor: Theme.of(context).cardColor, // Use cardColor for modal background
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) => Padding(
         padding: const EdgeInsets.all(24.0),
@@ -184,14 +205,14 @@ class AdminDashboard extends ConsumerWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(carro.codigo, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                    Text(carro.veiculo, style: const TextStyle(color: Color(0xFF7A7A9A))),
+                    Text(carro.codigo, style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
+                    Text(carro.veiculo, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).textTheme.bodySmall?.color)),
                   ],
                 ),
-                StatusChip(status: carro.isOnline ? 'ligado' : 'desligado', label: carro.isOnline ? "LIGADO" : "DESLIGADO"),
+                StatusChip(status: carro.isOnline ? 'ligado' : 'desligado', label: carro.isOnline ? "LIGADO" : "DE LIGADO"),
               ],
             ),
-            const Divider(height: 32, color: Colors.white10),
+            Divider(height: 32, color: Theme.of(context).dividerColor.withOpacity(0.1)),
             _PopupRow(label: "Placa", value: carro.placa),
             _PopupRow(label: "Franqueado", value: carro.franqueadoNome),
             _PopupRow(label: "Tempo ligado hoje", value: carro.tempoLigadoHoje, isHighlight: true),
@@ -272,7 +293,7 @@ class _FranqueadosTable extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text("FRANQUEADOS", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            Text("FRANQUEADOS", style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 16)),
             TextButton.icon(
               onPressed: () {},
               icon: const Icon(Icons.add, size: 16, color: Color(0xFF00E87A)),
@@ -284,26 +305,29 @@ class _FranqueadosTable extends StatelessWidget {
         const SizedBox(height: 8),
         AppCard(
           padding: EdgeInsets.zero,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(
-              columnSpacing: 24,
-              columns: const [
-                DataColumn(label: Text("Nome", style: TextStyle(color: Color(0xFF7A7A9A)))),
-                DataColumn(label: Text("Cidade", style: TextStyle(color: Color(0xFF7A7A9A)))),
-                DataColumn(label: Text("Carros", style: TextStyle(color: Color(0xFF7A7A9A)))),
-                DataColumn(label: Text("Campanhas", style: TextStyle(color: Color(0xFF7A7A9A)))),
-                DataColumn(label: Text("Ações", style: TextStyle(color: Color(0xFF7A7A9A)))),
-              ],
-              rows: franqueados.map((f) => DataRow(
-                cells: [
-                  DataCell(Text(f.nome, style: const TextStyle(color: Colors.white))),
-                  DataCell(Text("${f.cidade}/${f.estado}")),
-                  DataCell(Text("${f.carrosAtivos}")),
-                  DataCell(Text("${f.campanhasAtivas}")),
-                  DataCell(TextButton(onPressed: () {}, child: const Text("Ver Detalhes", style: TextStyle(color: AppTheme.primaryNeon)))),
+          child: SizedBox(
+            width: double.infinity,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                columnSpacing: 24,
+                columns: [
+                  DataColumn(label: Text("Nome", style: Theme.of(context).textTheme.bodySmall)),
+                  DataColumn(label: Text("Cidade", style: Theme.of(context).textTheme.bodySmall)),
+                  DataColumn(label: Text("Carros", style: Theme.of(context).textTheme.bodySmall)),
+                  DataColumn(label: Text("Campanhas", style: Theme.of(context).textTheme.bodySmall)),
+                  DataColumn(label: Text("Ações", style: Theme.of(context).textTheme.bodySmall)),
                 ],
-              )).toList(),
+                rows: franqueados.map((f) => DataRow(
+                  cells: [
+                    DataCell(Text(f.nome, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold))),
+                    DataCell(Text("${f.cidade}/${f.estado}", style: Theme.of(context).textTheme.bodyMedium)),
+                    DataCell(Text("${f.carrosAtivos}", style: Theme.of(context).textTheme.bodyMedium)),
+                    DataCell(Text("${f.campanhasAtivas}", style: Theme.of(context).textTheme.bodyMedium)),
+                    DataCell(TextButton(onPressed: () {}, child: const Text("Ver Detalhes", style: TextStyle(color: AppTheme.primaryNeon)))),
+                  ],
+                )).toList(),
+              ),
             ),
           ),
         ),
@@ -322,7 +346,7 @@ class _EventsFeed extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("FEED DE EVENTOS AO VIVO", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        Text("FEED DE EVENTOS AO VIVO", style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 16)),
         const SizedBox(height: 16),
         eventsAsync.when(
           data: (events) => AppCard(
