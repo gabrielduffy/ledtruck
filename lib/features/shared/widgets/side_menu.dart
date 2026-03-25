@@ -1,88 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../auth/providers/auth_provider.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:led_truck/features/auth/providers/auth_provider.dart';
+import 'package:led_truck/core/theme/app_theme.dart';
 
 class SideMenu extends ConsumerWidget {
   const SideMenu({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Escuta o provider de perfil para pegar o role
     final profile = ref.watch(profileProvider).value;
-    final currentPath = GoRouterState.of(context).matchedLocation;
+    final String currentPath = GoRouterState.of(context).uri.toString();
+    
+    // Fallback para admin caso carregando (ou usar 'franqueado' se preferir testar)
+    final role = profile?.role ?? 'admin'; 
 
     return Drawer(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      elevation: 0,
       child: Column(
         children: [
-          DrawerHeader(
-            decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+          // CABEÇALHO DO MENU
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(color: Colors.white10)),
+            ),
+            child: Row(
               children: [
-                Icon(Icons.flash_on, color: AppTheme.primaryNeon, size: 40,
-                     shadows: [BoxShadow(color: AppTheme.primaryNeon.withOpacity(0.5), blurRadius: 10)]
-                ),
-                const SizedBox(height: 8),
+                Icon(Icons.flash_on, color: AppTheme.primaryNeon, size: 32, shadows: [Shadow(color: AppTheme.primaryNeon.withOpacity(0.5), blurRadius: 10)]),
+                const SizedBox(width: 12),
                 Text(
-                  "LED TRUCK",
+                  "LED TRUCK", 
                   style: TextStyle(
                     color: Theme.of(context).textTheme.bodyLarge?.color,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 2,
-                    shadows: [
-                      Shadow(color: AppTheme.primaryNeon.withOpacity(0.3), blurRadius: 8)
-                    ]
-                  ),
+                    shadows: [Shadow(color: AppTheme.primaryNeon.withOpacity(0.3), blurRadius: 8)]
+                  )
                 ),
               ],
             ),
           ),
-          _MenuTile(
-            label: "Dashboard",
-            icon: Icons.dashboard_outlined,
-            path: "/admin/dashboard",
-            isSelected: currentPath == "/admin/dashboard",
+          
+          // ITENS DE MENU
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              children: [
+                if (role == 'admin') ...[
+                  _MenuTile(label: "Dashboard", icon: Icons.dashboard_outlined, path: "/admin/dashboard", isSelected: currentPath == "/admin/dashboard"),
+                  _MenuTile(label: "Dispositivos", icon: Icons.devices_outlined, path: "/admin/dispositivos", isSelected: currentPath == "/admin/dispositivos"),
+                  _MenuTile(label: "Rastreamento", icon: Icons.map_outlined, path: "/admin/rastreamento", isSelected: currentPath.contains("/rastreamento")),
+                  _MenuTile(label: "Franqueados", icon: Icons.business_outlined, path: "/admin/franqueados", isSelected: currentPath == "/admin/franqueados"),
+                  _MenuTile(label: "Relatórios", icon: Icons.bar_chart_outlined, path: "/admin/relatorios", isSelected: currentPath == "/admin/relatorios"),
+                  _MenuTile(label: "Integrações", icon: Icons.sync_alt_outlined, path: "/admin/integracoes", isSelected: currentPath == "/admin/integracoes"),
+                  _MenuTile(label: "Configurações", icon: Icons.settings_outlined, path: "/admin/configuracoes", isSelected: currentPath == "/admin/configuracoes"),
+                ] else if (role == 'franqueado') ...[
+                  _MenuTile(label: "Dashboard", icon: Icons.dashboard_outlined, path: "/franqueado/dashboard", isSelected: currentPath == "/franqueado/dashboard"),
+                  _MenuTile(label: "Meus Carros", icon: Icons.directions_car_outlined, path: "/franqueado/carros", isSelected: currentPath == "/franqueado/carros"),
+                  _MenuTile(label: "Campanhas", icon: Icons.campaign_outlined, path: "/franqueado/campanhas", isSelected: currentPath == "/franqueado/campanhas"),
+                  _MenuTile(label: "Rastreamento", icon: Icons.map_outlined, path: "/franqueado/rastreamento", isSelected: currentPath.contains("/rastreamento")),
+                  _MenuTile(label: "Configurações", icon: Icons.settings_outlined, path: "/admin/configuracoes", isSelected: currentPath == "/admin/configuracoes"),
+                ] else ...[
+                  // Outros roles
+                  _MenuTile(label: "Dashboard", icon: Icons.dashboard_outlined, path: "/", isSelected: true),
+                ]
+              ],
+            ),
           ),
-          _MenuTile(
-            label: "Dispositivos",
-            icon: Icons.devices_outlined,
-            path: "/admin/dispositivos",
-            isSelected: currentPath == "/admin/dispositivos",
-          ),
-          _MenuTile(
-            label: "Rastreamento",
-            icon: Icons.map_outlined,
-            path: "/admin/rastreamento",
-            isSelected: currentPath.contains("/rastreamento"),
-          ),
-          _MenuTile(
-            label: "Franqueados",
-            icon: Icons.business_outlined,
-            path: "/admin/franqueados",
-            isSelected: currentPath == "/admin/franqueados",
-          ),
-          _MenuTile(
-            label: "Relatórios",
-            icon: Icons.bar_chart_outlined,
-            path: "/admin/relatorios",
-            isSelected: currentPath == "/admin/relatorios",
-          ),
-          _MenuTile(
-            label: "Integrações",
-            icon: Icons.sync_alt_outlined,
-            path: "/admin/integracoes",
-            isSelected: currentPath == "/admin/integracoes",
-          ),
-          _MenuTile(
-            label: "Configurações",
-            icon: Icons.settings_outlined,
-            path: "/admin/configuracoes",
-            isSelected: currentPath == "/admin/configuracoes",
-          ),
-          const Spacer(),
+
           const Divider(color: Colors.white10),
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -104,7 +93,7 @@ class SideMenu extends ConsumerWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        profile?.role.toUpperCase() ?? "ADMIN",
+                        role.toUpperCase(),
                         style: const TextStyle(color: Color(0xFF7A7A9A), fontSize: 10),
                       ),
                     ],
@@ -142,7 +131,7 @@ class _MenuTile extends StatelessWidget {
       leading: Icon(
         icon,
         color: isSelected ? AppTheme.primaryNeon : Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5),
-        shadows: isSelected ? [BoxShadow(color: AppTheme.primaryNeon.withOpacity(0.4), blurRadius: 6)] : null,
+        shadows: isSelected ? [Shadow(color: AppTheme.primaryNeon.withOpacity(0.4), blurRadius: 6)] : null,
       ),
       title: Text(
         label,

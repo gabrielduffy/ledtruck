@@ -1,8 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:latlong2/latlong2.dart';
+
+class GeoPoint {
+  final double lat;
+  final double lng;
+  const GeoPoint(this.lat, this.lng);
+}
 
 class RastreamentoPonto {
-  final LatLng posicao;
+  final GeoPoint posicao;
   final double velocidade;
   final bool painelLigado;
   final DateTime horario;
@@ -46,11 +51,11 @@ class RastreamentoMockData {
 final rastreamentoListProvider = Provider<List<RastreamentoMockData>>((ref) {
   // Simulação de dados para SP
   final rotaSP = [
-    RastreamentoPonto(posicao: const LatLng(-23.5505, -46.6333), velocidade: 40, painelLigado: true, horario: DateTime.now().subtract(const Duration(hours: 2))),
-    RastreamentoPonto(posicao: const LatLng(-23.5515, -46.6343), velocidade: 45, painelLigado: true, horario: DateTime.now().subtract(const Duration(minutes: 110))),
-    RastreamentoPonto(posicao: const LatLng(-23.5525, -46.6353), velocidade: 0, painelLigado: true, horario: DateTime.now().subtract(const Duration(minutes: 100))),
-    RastreamentoPonto(posicao: const LatLng(-23.5535, -46.6363), velocidade: 50, painelLigado: false, horario: DateTime.now().subtract(const Duration(minutes: 90))),
-    RastreamentoPonto(posicao: const LatLng(-23.5545, -46.6373), velocidade: 60, painelLigado: true, horario: DateTime.now().subtract(const Duration(minutes: 80))),
+    RastreamentoPonto(posicao: const GeoPoint(-23.5505, -46.6333), velocidade: 40, painelLigado: true, horario: DateTime.now().subtract(const Duration(hours: 2))),
+    RastreamentoPonto(posicao: const GeoPoint(-23.5515, -46.6343), velocidade: 45, painelLigado: true, horario: DateTime.now().subtract(const Duration(minutes: 110))),
+    RastreamentoPonto(posicao: const GeoPoint(-23.5525, -46.6353), velocidade: 0, painelLigado: true, horario: DateTime.now().subtract(const Duration(minutes: 100))),
+    RastreamentoPonto(posicao: const GeoPoint(-23.5535, -46.6363), velocidade: 50, painelLigado: false, horario: DateTime.now().subtract(const Duration(minutes: 90))),
+    RastreamentoPonto(posicao: const GeoPoint(-23.5545, -46.6373), velocidade: 60, painelLigado: true, horario: DateTime.now().subtract(const Duration(minutes: 80))),
   ];
 
   return [
@@ -80,8 +85,8 @@ final rastreamentoListProvider = Provider<List<RastreamentoMockData>>((ref) {
       placa: 'MONTANA - XYZ-9876',
       cidade: 'Curitiba - PR',
       rota: [
-        RastreamentoPonto(posicao: const LatLng(-25.4284, -49.2733), velocidade: 60, painelLigado: true, horario: DateTime.now().subtract(const Duration(hours: 1))),
-        RastreamentoPonto(posicao: const LatLng(-25.4294, -49.2743), velocidade: 65, painelLigado: true, horario: DateTime.now().subtract(const Duration(minutes: 50))),
+        RastreamentoPonto(posicao: const GeoPoint(-25.4284, -49.2733), velocidade: 60, painelLigado: true, horario: DateTime.now().subtract(const Duration(hours: 1))),
+        RastreamentoPonto(posicao: const GeoPoint(-25.4294, -49.2743), velocidade: 65, painelLigado: true, horario: DateTime.now().subtract(const Duration(minutes: 50))),
       ],
       kmTotal: 84.2,
       maxVelocidade: 70.0,
@@ -104,8 +109,8 @@ final rastreamentoListProvider = Provider<List<RastreamentoMockData>>((ref) {
       placa: 'SAVEIRO - DEF-4567',
       cidade: 'Florianópolis - SC',
       rota: [
-        RastreamentoPonto(posicao: const LatLng(-27.5954, -48.5480), velocidade: 40, painelLigado: true, horario: DateTime.now().subtract(const Duration(hours: 2))),
-        RastreamentoPonto(posicao: const LatLng(-27.6000, -48.5500), velocidade: 50, painelLigado: false, horario: DateTime.now().subtract(const Duration(minutes: 90))),
+        RastreamentoPonto(posicao: const GeoPoint(-27.5954, -48.5480), velocidade: 40, painelLigado: true, horario: DateTime.now().subtract(const Duration(hours: 2))),
+        RastreamentoPonto(posicao: const GeoPoint(-27.6000, -48.5500), velocidade: 50, painelLigado: false, horario: DateTime.now().subtract(const Duration(minutes: 90))),
       ],
       kmTotal: 65.0,
       maxVelocidade: 60.0,

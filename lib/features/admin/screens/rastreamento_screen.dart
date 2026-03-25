@@ -70,7 +70,7 @@ class RastreamentoScreen extends ConsumerWidget {
           const SizedBox(width: 16),
         ],
       ),
-      body: const DefaultTabController(
+      body: DefaultTabController(
         length: 4,
         child: Column(
           children: [

@@ -41,8 +41,6 @@ dependencies:
   flutter_riverpod: ^2.5.1
 
   # Maps & Tracking
-  flutter_map: ^6.0.0
-  latlong2: ^0.9.1
 
   # Charts & Formatting
   fl_chart: ^0.67.0

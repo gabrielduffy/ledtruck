@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../features/auth/screens/login_screen.dart';
-import '../../features/auth/providers/auth_provider.dart';
-import '../../features/admin/screens/admin_dashboard.dart';
-import '../../features/admin/screens/admin_dispositivos_screen.dart';
-import '../../features/admin/screens/rastreamento_screen.dart';
-import '../../features/admin/screens/admin_relatorios_screen.dart';
-import '../../features/admin/screens/admin_integracoes_screen.dart';
-import '../../features/admin/screens/admin_configuracoes_screen.dart';
+import 'package:led_truck/features/auth/screens/login_screen.dart';
+import 'package:led_truck/features/auth/providers/auth_provider.dart';
+import 'package:led_truck/features/admin/screens/admin_dashboard.dart';
+import 'package:led_truck/features/admin/screens/admin_dispositivos_screen.dart';
+import 'package:led_truck/features/admin/screens/rastreamento_screen.dart';
+import 'package:led_truck/features/admin/screens/admin_relatorios_screen.dart';
+import 'package:led_truck/features/admin/screens/admin_integracoes_screen.dart';
+import 'package:led_truck/features/admin/screens/admin_configuracoes_screen.dart';
+import 'package:led_truck/features/franqueado/screens/franqueado_dashboard_screen.dart';
+import 'package:led_truck/features/franqueado/screens/franqueado_carros_screen.dart';
+import 'package:led_truck/features/franqueado/screens/franqueado_campanhas_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authStateProvider);
@@ -76,12 +79,20 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const AdminConfiguracoesScreen(),
       ),
       GoRoute(
-        path: '/franqueado/rastreamento',
-        builder: (context, state) => const RastreamentoScreen(),
+        path: '/franqueado/dashboard',
+        builder: (context, state) => const FranqueadoDashboardScreen(),
       ),
       GoRoute(
-        path: '/franqueado/dashboard',
-        builder: (context, state) => const Scaffold(body: Center(child: Text("Franqueado Dashboard"))),
+        path: '/franqueado/carros',
+        builder: (context, state) => const FranqueadoCarrosScreen(),
+      ),
+      GoRoute(
+        path: '/franqueado/campanhas',
+        builder: (context, state) => const FranqueadoCampanhasScreen(),
+      ),
+      GoRoute(
+        path: '/franqueado/rastreamento',
+        builder: (context, state) => const RastreamentoScreen(),
       ),
       GoRoute(
         path: '/operador/dashboard',

@@ -96,7 +96,14 @@ class _AdminConfiguracoesScreenState extends ConsumerState<AdminConfiguracoesScr
                   const SizedBox(height: 16),
                   const AppTextField(label: "Usuário", icon: Icons.person),
                   const SizedBox(height: 16),
-                  const AppTextField(label: "Senha", icon: Icons.password, obscureText: true),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Senha", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                      const SizedBox(height: 8),
+                      TextField(obscureText: true, decoration: InputDecoration(hintText: "Senha SMTP", prefixIcon: const Icon(Icons.password), filled: true, fillColor: Theme.of(context).dialogBackgroundColor, border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)))),
+                    ],
+                  ),
                   const SizedBox(height: 16),
                   const AppTextField(label: "E-mail Remetente", icon: Icons.alternate_email),
                 ]
@@ -190,16 +197,30 @@ class _AdminConfiguracoesScreenState extends ConsumerState<AdminConfiguracoesScr
                     height: 250,
                     child: TabBarView(
                       children: [
-                        const Column(
+                        Column(
                           children: [
                             AppTextField(label: "Assunto do E-mail", icon: Icons.title),
                             SizedBox(height: 16),
-                            Expanded(child: AppTextField(label: "Corpo HTML", icon: Icons.code, maxLines: 5)),
+                             Expanded(child: Column(
+                               crossAxisAlignment: CrossAxisAlignment.start,
+                               children: [
+                                 const Text("Corpo HTML", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                                 const SizedBox(height: 8),
+                                 Expanded(child: TextField(maxLines: 5, decoration: InputDecoration(hintText: "HTML aqui...", prefixIcon: const Icon(Icons.code), filled: true, fillColor: const Color(0xFF0D0D14), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))))),
+                               ],
+                             )),
                           ],
                         ),
-                        const Column(
+                        Column(
                           children: [
-                            Expanded(child: AppTextField(label: "Mensagem WhatsApp (Markdown)", icon: Icons.message, maxLines: 6)),
+                             Expanded(child: Column(
+                               crossAxisAlignment: CrossAxisAlignment.start,
+                               children: [
+                                 const Text("Mensagem WhatsApp (Markdown)", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                                 const SizedBox(height: 8),
+                                 Expanded(child: TextField(maxLines: 6, decoration: InputDecoration(hintText: "Mensagem aqui...", prefixIcon: const Icon(Icons.message), filled: true, fillColor: const Color(0xFF0D0D14), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))))),
+                               ],
+                             )),
                           ],
                         ),
                       ],

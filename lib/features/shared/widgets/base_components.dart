@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:led_truck/core/theme/app_theme.dart';
 
 class AppCard extends StatefulWidget {
   final Widget child;
@@ -60,6 +61,8 @@ class AppButton extends StatelessWidget {
   final bool isLoading;
   final bool isSecondary;
 
+  final IconData? icon;
+
   const AppButton({
     super.key,
     required this.label,
@@ -67,6 +70,7 @@ class AppButton extends StatelessWidget {
     this.color,
     this.isLoading = false,
     this.isSecondary = false,
+    this.icon,
   });
 
   @override
@@ -93,9 +97,18 @@ class AppButton extends StatelessWidget {
                 width: 20,
                 child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
               )
-            : Text(
-                label,
-                style: const TextStyle(fontWeight: FontWeight.w600),
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (icon != null) ...[
+                    Icon(icon, size: 18),
+                    const SizedBox(width: 8),
+                  ],
+                  Text(
+                    label,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ],
               ),
       ),
     );
@@ -109,6 +122,9 @@ class AppTextField extends StatelessWidget {
   final String? hint;
   final TextInputType? type;
 
+  final IconData? icon;
+  final int maxLines;
+
   const AppTextField({
     super.key,
     required this.label,
@@ -116,6 +132,8 @@ class AppTextField extends StatelessWidget {
     this.isPassword = false,
     this.hint,
     this.type,
+    this.icon,
+    this.maxLines = 1,
   });
 
   @override
@@ -134,12 +152,17 @@ class AppTextField extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        TextField(
-          controller: controller,
-          obscureText: isPassword,
-          keyboardType: type,
-          style: TextStyle(color: isDark ? AppTheme.textLight : AppTheme.textDark),
-          decoration: InputDecoration(
+          TextField(
+            controller: controller,
+            obscureText: isPassword,
+            keyboardType: type,
+            maxLines: maxLines,
+            style: GoogleFonts.montserrat(
+              color: isDark ? AppTheme.textLight : AppTheme.textDark,
+              fontSize: 14,
+            ),
+            decoration: InputDecoration(
+            prefixIcon: icon != null ? Icon(icon, color: AppTheme.primaryNeon.withOpacity(0.5), size: 20) : null,
             hintText: hint,
             hintStyle: TextStyle(color: isDark ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.2)),
             filled: true,
