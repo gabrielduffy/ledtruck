@@ -37,12 +37,12 @@ class _AppCardState extends State<AppCard> {
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: _isHovered ? AppTheme.primaryNeon.withOpacity(0.3) : AppTheme.primaryNeon.withOpacity(0.15),
+            color: _isHovered ? AppTheme.primaryNeon.withValues(alpha: 0.3) : AppTheme.primaryNeon.withValues(alpha: 0.15),
             width: 1,
           ),
           boxShadow: _isHovered ? [
             BoxShadow(
-              color: AppTheme.primaryNeon.withOpacity(0.1),
+              color: AppTheme.primaryNeon.withValues(alpha: 0.1),
               blurRadius: 10,
               spreadRadius: 2,
             )
@@ -88,8 +88,8 @@ class AppButton extends StatelessWidget {
           backgroundColor: isSecondary ? Colors.transparent : primaryColor,
           foregroundColor: Colors.white,
           elevation: isSecondary ? 0 : 8,
-          shadowColor: isSecondary ? Colors.transparent : primaryColor.withOpacity(0.5),
-          side: isSecondary ? BorderSide(color: Theme.of(context).dividerColor.withOpacity(0.12)) : null,
+          shadowColor: isSecondary ? Colors.transparent : primaryColor.withValues(alpha: 0.5),
+          side: isSecondary ? BorderSide(color: Theme.of(context).dividerColor.withValues(alpha: 0.12)) : null,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
@@ -166,11 +166,11 @@ class AppTextField extends StatelessWidget {
               fontSize: 14,
             ),
             decoration: InputDecoration(
-            prefixIcon: icon != null ? Icon(icon, color: AppTheme.primaryNeon.withOpacity(0.5), size: 20) : null,
+            prefixIcon: icon != null ? Icon(icon, color: AppTheme.primaryNeon.withValues(alpha: 0.5), size: 20) : null,
             hintText: hint,
-            hintStyle: TextStyle(color: isDark ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.2)),
+            hintStyle: TextStyle(color: isDark ? Colors.white.withValues(alpha: 0.2) : Colors.black.withValues(alpha: 0.2)),
             filled: true,
-            fillColor: Theme.of(context).dialogBackgroundColor,
+            fillColor: Theme.of(context).dialogTheme.backgroundColor,
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -178,7 +178,7 @@ class AppTextField extends StatelessWidget {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05)),
+              borderSide: BorderSide(color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),

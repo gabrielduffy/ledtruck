@@ -233,7 +233,7 @@ class FranqueadoDashboardScreen extends ConsumerWidget {
                   show: true,
                   drawVerticalLine: false,
                   horizontalInterval: 10,
-                  getDrawingHorizontalLine: (value) => FlLine(color: Theme.of(context).dividerColor.withOpacity(0.1), strokeWidth: 1),
+                  getDrawingHorizontalLine: (value) => FlLine(color: Theme.of(context).dividerColor.withValues(alpha: 0.1), strokeWidth: 1),
                 ),
                 borderData: FlBorderData(show: false),
                 barGroups: [
@@ -303,7 +303,7 @@ class FranqueadoDashboardScreen extends ConsumerWidget {
       DataCell(Text(placa)),
       DataCell(Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(color: (isOnline ? Colors.green : Colors.red).withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(color: (isOnline ? Colors.green : Colors.red).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
         child: Text(status, style: TextStyle(color: isOnline ? Colors.green : Colors.red, fontSize: 10, fontWeight: FontWeight.bold)),
       )),
       DataCell(Text(operador)),
@@ -368,7 +368,7 @@ class FranqueadoDashboardScreen extends ConsumerWidget {
                    activeColor: AppTheme.primaryNeon,
                  ),
                  const SizedBox(height: 8),
-                 Text("Ao salvar, uma conta será criada automaticamente via Supabase Auth Invite para o anunciante.", style: TextStyle(color: Theme.of(ctx).textTheme.bodyMedium?.color?.withOpacity(0.5), fontSize: 12)),
+                 Text("Ao salvar, uma conta será criada automaticamente via Supabase Auth Invite para o anunciante.", style: TextStyle(color: Theme.of(ctx).textTheme.bodyMedium?.color?.withValues(alpha: 0.5), fontSize: 12)),
                ],
              ),
            ),
@@ -445,7 +445,7 @@ class _MetricCard extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(16)),
+            decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(16)),
             child: Icon(icon, color: color, size: 32),
           ),
           const SizedBox(width: 16),
@@ -454,7 +454,7 @@ class _MetricCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(title, style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7), fontSize: 14)),
+                Text(title, style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7), fontSize: 14)),
                 const SizedBox(height: 4),
                 Text(value, style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontSize: 24, fontWeight: FontWeight.bold)),
               ],

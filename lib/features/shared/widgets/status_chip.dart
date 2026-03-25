@@ -78,9 +78,9 @@ class _StatusChipState extends State<StatusChip> with SingleTickerProviderStateM
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: statusColor.withOpacity(0.12),
+        color: statusColor.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: statusColor.withOpacity(0.24)),
+        border: Border.all(color: statusColor.withValues(alpha: 0.24)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -97,10 +97,10 @@ class _StatusChipState extends State<StatusChip> with SingleTickerProviderStateM
                       height: _animation.value,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: statusColor.withOpacity(1.0 - _controller.value),
+                        color: statusColor.withValues(alpha: 1.0 - _controller.value),
                         boxShadow: [
                           BoxShadow(
-                            color: statusColor.withOpacity((1.0 - _controller.value) * 0.5),
+                            color: statusColor.withValues(alpha: (1.0 - _controller.value) * 0.5),
                             blurRadius: 6,
                             spreadRadius: 2,
                           )

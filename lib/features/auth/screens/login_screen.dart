@@ -36,7 +36,7 @@ class _AnimatedGridBackgroundState extends State<AnimatedGridBackground> with Si
         return CustomPaint(
           painter: _GridPainter(
             offset: _controller.value,
-            color: AppTheme.primaryNeon.withOpacity(0.05),
+            color: AppTheme.primaryNeon.withValues(alpha: 0.05),
           ),
           child: Container(),
         );
@@ -142,7 +142,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       Icons.flash_on, 
                       color: AppTheme.primaryNeon, 
                       size: 48,
-                      shadows: [BoxShadow(color: AppTheme.primaryNeon.withOpacity(0.5), blurRadius: 15)],
+                      shadows: [BoxShadow(color: AppTheme.primaryNeon.withValues(alpha: 0.5), blurRadius: 15)],
                     ),
                     const SizedBox(height: 12),
                     Text(
@@ -153,13 +153,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         fontWeight: FontWeight.bold,
                         letterSpacing: 2,
                         color: Theme.of(context).textTheme.bodyLarge?.color,
-                        shadows: [Shadow(color: AppTheme.primaryNeon.withOpacity(0.3), blurRadius: 8)],
+                        shadows: [Shadow(color: AppTheme.primaryNeon.withValues(alpha: 0.3), blurRadius: 8)],
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       "Painéis de LED em movimento",
-                      style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5)),
+                      style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5)),
                     ),
                     const SizedBox(height: 32),
                     
@@ -224,7 +224,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       },
                       child: Text(
                         "Esqueci minha senha",
-                        style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5)),
+                        style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5)),
                       ),
                     ),
                   ],

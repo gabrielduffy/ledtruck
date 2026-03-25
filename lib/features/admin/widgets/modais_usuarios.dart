@@ -97,7 +97,7 @@ class _ModalUsuarioDetalhesState extends State<ModalUsuarioDetalhes> with Single
         children: [
           Row(
             children: [
-              CircleAvatar(radius: 30, backgroundColor: AppTheme.primaryNeon.withOpacity(0.2), child: Text(iniciais, style: const TextStyle(color: AppTheme.primaryNeon, fontSize: 20))),
+              CircleAvatar(radius: 30, backgroundColor: AppTheme.primaryNeon.withValues(alpha: 0.2), child: Text(iniciais, style: const TextStyle(color: AppTheme.primaryNeon, fontSize: 20))),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(

@@ -29,7 +29,7 @@ class SideMenu extends ConsumerWidget {
             ),
             child: Row(
               children: [
-                Icon(Icons.flash_on, color: AppTheme.primaryNeon, size: 32, shadows: [Shadow(color: AppTheme.primaryNeon.withOpacity(0.5), blurRadius: 10)]),
+                Icon(Icons.flash_on, color: AppTheme.primaryNeon, size: 32, shadows: [Shadow(color: AppTheme.primaryNeon.withValues(alpha: 0.5), blurRadius: 10)]),
                 const SizedBox(width: 12),
                 Text(
                   "LED TRUCK", 
@@ -38,7 +38,7 @@ class SideMenu extends ConsumerWidget {
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 2,
-                    shadows: [Shadow(color: AppTheme.primaryNeon.withOpacity(0.3), blurRadius: 8)]
+                    shadows: [Shadow(color: AppTheme.primaryNeon.withValues(alpha: 0.3), blurRadius: 8)]
                   )
                 ),
               ],
@@ -135,21 +135,21 @@ class _MenuTile extends StatelessWidget {
     return ListTile(
       leading: Icon(
         icon,
-        color: isSelected ? AppTheme.primaryNeon : Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5),
-        shadows: isSelected ? [Shadow(color: AppTheme.primaryNeon.withOpacity(0.4), blurRadius: 6)] : null,
+        color: isSelected ? AppTheme.primaryNeon : Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
+        shadows: isSelected ? [Shadow(color: AppTheme.primaryNeon.withValues(alpha: 0.4), blurRadius: 6)] : null,
       ),
       title: Text(
         label,
         style: TextStyle(
-          color: isSelected ? Theme.of(context).textTheme.bodyLarge?.color : Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5),
+          color: isSelected ? Theme.of(context).textTheme.bodyLarge?.color : Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         ),
       ),
       selected: isSelected,
       onTap: () => context.go(path),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      tileColor: isSelected ? AppTheme.primaryNeon.withOpacity(0.1) : null,
-      selectedTileColor: AppTheme.primaryNeon.withOpacity(0.1),
+      tileColor: isSelected ? AppTheme.primaryNeon.withValues(alpha: 0.1) : null,
+      selectedTileColor: AppTheme.primaryNeon.withValues(alpha: 0.1),
     );
   }
 }

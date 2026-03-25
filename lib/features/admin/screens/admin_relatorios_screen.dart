@@ -109,7 +109,7 @@ class _AdminRelatoriosScreenState extends ConsumerState<AdminRelatoriosScreen> {
                                 show: true,
                                 drawVerticalLine: false,
                                 getDrawingHorizontalLine: (value) => FlLine(
-                                  color: Theme.of(context).dividerColor.withOpacity(0.1),
+                                  color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
                                   strokeWidth: 1,
                                 ),
                               ),
@@ -119,7 +119,7 @@ class _AdminRelatoriosScreenState extends ConsumerState<AdminRelatoriosScreen> {
                                     showTitles: true,
                                     reservedSize: 40,
                                     getTitlesWidget: (value, meta) {
-                                      return Text('${value.toInt()}h', style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5), fontSize: 12));
+                                      return Text('${value.toInt()}h', style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5), fontSize: 12));
                                     },
                                   ),
                                 ),
@@ -130,7 +130,7 @@ class _AdminRelatoriosScreenState extends ConsumerState<AdminRelatoriosScreen> {
                                     getTitlesWidget: (value, meta) {
                                       const dias = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
                                       if (value.toInt() >= 0 && value.toInt() < dias.length) {
-                                        return Text(dias[value.toInt()], style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5), fontSize: 12));
+                                        return Text(dias[value.toInt()], style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5), fontSize: 12));
                                       }
                                       return const Text('');
                                     },
@@ -158,7 +158,7 @@ class _AdminRelatoriosScreenState extends ConsumerState<AdminRelatoriosScreen> {
                                   dotData: const FlDotData(show: false),
                                   belowBarData: BarAreaData(
                                     show: true,
-                                    color: AppTheme.primaryNeon.withOpacity(0.15),
+                                    color: AppTheme.primaryNeon.withValues(alpha: 0.15),
                                   ),
                                 ),
                               ],
@@ -179,7 +179,7 @@ class _AdminRelatoriosScreenState extends ConsumerState<AdminRelatoriosScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Total de Horas", style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5), fontSize: 14)),
+                            Text("Total de Horas", style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5), fontSize: 14)),
                             const SizedBox(height: 8),
                             Text("530h", style: TextStyle(color: AppTheme.primaryNeon, fontSize: 32, fontWeight: FontWeight.w800)),
                             const SizedBox(height: 8),
@@ -193,7 +193,7 @@ class _AdminRelatoriosScreenState extends ConsumerState<AdminRelatoriosScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Carros Ativos", style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5), fontSize: 14)),
+                            Text("Carros Ativos", style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5), fontSize: 14)),
                             const SizedBox(height: 8),
                             Text("42", style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: 32, fontWeight: FontWeight.w800)),
                              const SizedBox(height: 8),
@@ -207,7 +207,7 @@ class _AdminRelatoriosScreenState extends ConsumerState<AdminRelatoriosScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Campanhas Rodando", style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5), fontSize: 14)),
+                            Text("Campanhas Rodando", style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5), fontSize: 14)),
                             const SizedBox(height: 8),
                             Text("18", style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: 32, fontWeight: FontWeight.w800)),
                           ],

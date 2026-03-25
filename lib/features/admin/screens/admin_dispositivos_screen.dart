@@ -85,7 +85,7 @@ class AdminDispositivosScreen extends ConsumerWidget {
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: iconColor.withOpacity(0.1),
+                                  color: iconColor.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Icon(_getIcon(metric.icon), color: iconColor, size: 24),
@@ -206,26 +206,26 @@ class AdminDispositivosScreen extends ConsumerWidget {
     Color text;
     switch (status) {
       case 'estoque':
-        bg = Colors.blue.withOpacity(0.12);
+        bg = Colors.blue.withValues(alpha: 0.12);
         text = Colors.blue;
         break;
       case 'instalado':
-        bg = const Color(0xFF00E87A).withOpacity(0.12);
+        bg = const Color(0xFF00E87A).withValues(alpha: 0.12);
         text = const Color(0xFF00E87A);
         break;
       case 'manutencao':
-        bg = Colors.amber.withOpacity(0.12);
+        bg = Colors.amber.withValues(alpha: 0.12);
         text = Colors.amber;
         break;
       case 'inativo':
       default:
-        bg = Colors.grey.withOpacity(0.12);
+        bg = Colors.grey.withValues(alpha: 0.12);
         text = Colors.grey;
         break;
     }
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(20), border: Border.all(color: text.withOpacity(0.3))),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(20), border: Border.all(color: text.withValues(alpha: 0.3))),
       child: Text(status.toUpperCase(), style: TextStyle(color: text, fontSize: 12, fontWeight: FontWeight.bold)),
     );
   }

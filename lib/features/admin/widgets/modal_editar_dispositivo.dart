@@ -83,7 +83,7 @@ class _ModalEditarDispositivoState extends ConsumerState<ModalEditarDispositivo>
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              value: selectedStatus,
+              initialValue: selectedStatus,
               decoration: InputDecoration(
                 labelText: "Status",
                 prefixIcon: const Icon(Icons.info),

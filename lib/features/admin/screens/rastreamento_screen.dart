@@ -77,7 +77,7 @@ class RastreamentoScreen extends ConsumerWidget {
             TabBar(
               indicatorColor: AppTheme.primaryNeon,
               labelColor: AppTheme.primaryNeon,
-              unselectedLabelColor: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5),
+              unselectedLabelColor: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
               isScrollable: true,
               tabAlignment: TabAlignment.start,
               tabs: [

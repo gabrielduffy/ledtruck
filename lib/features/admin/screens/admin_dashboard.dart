@@ -84,7 +84,7 @@ class AdminDashboard extends ConsumerWidget {
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: AppTheme.primaryNeon.withOpacity(0.1),
+                                  color: AppTheme.primaryNeon.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Icon(_getIcon(metric.icon), color: AppTheme.primaryNeon, size: 24),
@@ -213,7 +213,7 @@ class AdminDashboard extends ConsumerWidget {
                 StatusChip(status: carro.isOnline ? 'ligado' : 'desligado', label: carro.isOnline ? "LIGADO" : "DE LIGADO"),
               ],
             ),
-            Divider(height: 32, color: Theme.of(context).dividerColor.withOpacity(0.1)),
+            Divider(height: 32, color: Theme.of(context).dividerColor.withValues(alpha: 0.1)),
             _PopupRow(label: "Placa", value: carro.placa),
             _PopupRow(label: "Franqueado", value: carro.franqueadoNome),
             _PopupRow(label: "Tempo ligado hoje", value: carro.tempoLigadoHoje, isHighlight: true),
@@ -243,7 +243,7 @@ class _MapMarker extends StatelessWidget {
         boxShadow: [
           if (isOnline)
             BoxShadow(
-              color: const Color(0xFF00E87A).withOpacity(0.5),
+              color: const Color(0xFF00E87A).withValues(alpha: 0.5),
               blurRadius: 10,
               spreadRadius: 2,
             ),

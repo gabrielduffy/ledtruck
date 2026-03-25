@@ -176,7 +176,7 @@ class OperadorDashboardScreen extends ConsumerWidget {
                   labelText: "Evento",
                   labelStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: Theme.of(context).dividerColor.withOpacity(0.1))),
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: Theme.of(context).dividerColor.withValues(alpha: 0.1))),
                 ),
                 items: const [
                   DropdownMenuItem(value: "ligou", child: Text("Ligou Painel")),
@@ -190,7 +190,7 @@ class OperadorDashboardScreen extends ConsumerWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text("Cancelar", style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5))),
+              child: Text("Cancelar", style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5))),
             ),
             AppButton(
               label: "REGISTRAR",
@@ -212,7 +212,7 @@ class OperadorDashboardScreen extends ConsumerWidget {
       width: 48,
       height: 48,
       decoration: BoxDecoration(
-        color: AppTheme.primaryNeon.withOpacity(0.1),
+        color: AppTheme.primaryNeon.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: const Icon(Icons.directions_car, color: AppTheme.primaryNeon),
@@ -234,7 +234,7 @@ class OperadorDashboardScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
-        color: corStatus.withOpacity(0.1),
+        color: corStatus.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(status, style: TextStyle(color: corStatus, fontSize: 10, fontWeight: FontWeight.bold)),

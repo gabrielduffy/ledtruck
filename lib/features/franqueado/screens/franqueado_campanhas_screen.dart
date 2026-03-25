@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:led_truck/features/shared/widgets/side_menu.dart';
 import 'package:led_truck/features/shared/widgets/notifications_drawer.dart';
 import 'package:led_truck/features/shared/widgets/base_components.dart';
@@ -70,7 +69,7 @@ class FranqueadoCampanhasScreen extends ConsumerWidget {
                   items: const [DropdownMenuItem(value: "Todas", child: Text("Todas")), DropdownMenuItem(value: "Ativas", child: Text("Ativas")), DropdownMenuItem(value: "Concluídas", child: Text("Concluídas"))],
                   onChanged: (val) {},
                   style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
-                  underline: Container(height: 1, color: AppTheme.primaryNeon.withOpacity(0.3)),
+                  underline: Container(height: 1, color: AppTheme.primaryNeon.withValues(alpha: 0.3)),
                 )
               ],
             ),
@@ -80,7 +79,7 @@ class FranqueadoCampanhasScreen extends ConsumerWidget {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
-                  headingTextStyle: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5), fontWeight: FontWeight.bold),
+                  headingTextStyle: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5), fontWeight: FontWeight.bold),
                   dataTextStyle: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
                   columns: const [
                     DataColumn(label: Text("Anunciante")),
@@ -120,7 +119,7 @@ class FranqueadoCampanhasScreen extends ConsumerWidget {
       DataCell(Text("$carros carros")),
       DataCell(Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(color: (isDone ? Colors.green : Colors.blue).withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(color: (isDone ? Colors.green : Colors.blue).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
         child: Text(status, style: TextStyle(color: isDone ? Colors.green : Colors.blue, fontSize: 10, fontWeight: FontWeight.bold)),
       )),
       DataCell(Row(
@@ -204,7 +203,7 @@ class FranqueadoCampanhasScreen extends ConsumerWidget {
                    activeColor: AppTheme.primaryNeon,
                  ),
                  const SizedBox(height: 8),
-                 Text("Ao salvar, uma conta será criada automaticamente via Supabase Auth Invite para o anunciante.", style: TextStyle(color: Theme.of(ctx).textTheme.bodyMedium?.color?.withOpacity(0.5), fontSize: 12)),
+                 Text("Ao salvar, uma conta será criada automaticamente via Supabase Auth Invite para o anunciante.", style: TextStyle(color: Theme.of(ctx).textTheme.bodyMedium?.color?.withValues(alpha: 0.5), fontSize: 12)),
                ],
              ),
            ),

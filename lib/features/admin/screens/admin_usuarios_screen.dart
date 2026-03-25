@@ -173,21 +173,21 @@ class _AdminUsuariosScreenState extends ConsumerState<AdminUsuariosScreen> {
                           cells: [
                           DataCell(Row(
                             children: [
-                              CircleAvatar(radius: 16, backgroundColor: AppTheme.primaryNeon.withOpacity(0.2), child: Text(u['avatar'], style: const TextStyle(fontSize: 10, color: AppTheme.primaryNeon))),
+                              CircleAvatar(radius: 16, backgroundColor: AppTheme.primaryNeon.withValues(alpha: 0.2), child: Text(u['avatar'], style: const TextStyle(fontSize: 10, color: AppTheme.primaryNeon))),
                               const SizedBox(width: 12),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(u['nome'], style: const TextStyle(fontWeight: FontWeight.bold)),
-                                  Text(u['email'], style: TextStyle(fontSize: 11, color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6))),
+                                  Text(u['email'], style: TextStyle(fontSize: 11, color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6))),
                                 ],
                               )
                             ],
                           )),
                           DataCell(Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(color: _getBadgeColor(u['role']).withOpacity(0.1), borderRadius: BorderRadius.circular(12), border: Border.all(color: _getBadgeColor(u['role']).withOpacity(0.3))),
+                            decoration: BoxDecoration(color: _getBadgeColor(u['role']).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12), border: Border.all(color: _getBadgeColor(u['role']).withValues(alpha: 0.3))),
                             child: Text(u['role'], style: TextStyle(color: _getBadgeColor(u['role']), fontSize: 11, fontWeight: FontWeight.bold)),
                           )),
                           DataCell(Text(u['franqueado'])),
@@ -224,7 +224,7 @@ class _AdminUsuariosScreenState extends ConsumerState<AdminUsuariosScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(label, style: Theme.of(context).textTheme.bodyMedium),
-              Icon(Icons.people, color: color.withOpacity(0.5), size: 16),
+              Icon(Icons.people, color: color.withValues(alpha: 0.5), size: 16),
             ],
           ),
           const SizedBox(height: 8),

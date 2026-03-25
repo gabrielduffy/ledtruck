@@ -104,7 +104,7 @@ class AnuncianteDashboardScreen extends ConsumerWidget {
                         child: LinearProgressIndicator(
                           value: 0.81,
                           minHeight: 12,
-                          backgroundColor: Theme.of(context).dividerColor.withOpacity(0.1),
+                          backgroundColor: Theme.of(context).dividerColor.withValues(alpha: 0.1),
                           valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.primaryNeon),
                         ),
                       ),
@@ -173,7 +173,7 @@ class AnuncianteDashboardScreen extends ConsumerWidget {
                   Expanded(child: Text("TRUCK-${105 + index} - Av. Paulista, 1000", style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500))),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(color: Colors.green.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+                    decoration: BoxDecoration(color: Colors.green.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
                     child: const Text("AO VIVO", style: TextStyle(color: Colors.green, fontSize: 10, fontWeight: FontWeight.bold)),
                   ),
                 ],
@@ -197,7 +197,7 @@ class AnuncianteDashboardScreen extends ConsumerWidget {
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Theme.of(context).dividerColor.withOpacity(0.1)),
+            border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.1)),
           ),
           child: const Center(
             child: Column(

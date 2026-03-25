@@ -70,7 +70,7 @@ class FranqueadoCarrosScreen extends ConsumerWidget {
                   items: const [DropdownMenuItem(value: "Todos", child: Text("Todos os Status")), DropdownMenuItem(value: "Online", child: Text("Online")), DropdownMenuItem(value: "Offline", child: Text("Offline"))],
                   onChanged: (val) {},
                   style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
-                  underline: Container(height: 1, color: AppTheme.primaryNeon.withOpacity(0.3)),
+                  underline: Container(height: 1, color: AppTheme.primaryNeon.withValues(alpha: 0.3)),
                 )
               ],
             ),
@@ -80,7 +80,7 @@ class FranqueadoCarrosScreen extends ConsumerWidget {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
-                  headingTextStyle: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5), fontWeight: FontWeight.bold),
+                  headingTextStyle: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5), fontWeight: FontWeight.bold),
                   dataTextStyle: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
                   columns: const [
                     DataColumn(label: Text("Código")),
@@ -148,7 +148,7 @@ class FranqueadoCarrosScreen extends ConsumerWidget {
       DataCell(Text(placa)),
       DataCell(Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(color: (isOnline ? Colors.green : Colors.red).withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(color: (isOnline ? Colors.green : Colors.red).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
         child: Text(status, style: TextStyle(color: isOnline ? Colors.green : Colors.red, fontSize: 10, fontWeight: FontWeight.bold)),
       )),
       DataCell(Text(operador)),

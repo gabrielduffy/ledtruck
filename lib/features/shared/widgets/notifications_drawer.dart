@@ -47,11 +47,11 @@ class NotificationsDrawer extends ConsumerWidget {
                 return Opacity(
                   opacity: unread ? 1.0 : 0.5,
                   child: Container(
-                    color: unread ? AppTheme.primaryNeon.withOpacity(0.05) : Colors.transparent,
+                    color: unread ? AppTheme.primaryNeon.withValues(alpha: 0.05) : Colors.transparent,
                     child: ListTile(
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       leading: CircleAvatar(
-                        backgroundColor: AppTheme.primaryNeon.withOpacity(0.15),
+                        backgroundColor: AppTheme.primaryNeon.withValues(alpha: 0.15),
                         child: const Icon(Icons.notifications, color: AppTheme.primaryNeon, size: 20),
                       ),
                       title: Text(

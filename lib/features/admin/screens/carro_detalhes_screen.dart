@@ -69,13 +69,13 @@ class _CarroDetalhesScreenState extends ConsumerState<CarroDetalhesScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _buildHeaderInfo(context, "Código", widget.id),
-                          VerticalDivider(color: Theme.of(context).dividerColor.withOpacity(0.1), width: 1),
+                          VerticalDivider(color: Theme.of(context).dividerColor.withValues(alpha: 0.1), width: 1),
                           _buildHeaderInfo(context, "Modelo", "VW Delivery 11.180"),
-                          VerticalDivider(color: Theme.of(context).dividerColor.withOpacity(0.1), width: 1),
+                          VerticalDivider(color: Theme.of(context).dividerColor.withValues(alpha: 0.1), width: 1),
                           _buildHeaderInfo(context, "Placa", "ABC-1234"),
-                          VerticalDivider(color: Theme.of(context).dividerColor.withOpacity(0.1), width: 1),
+                          VerticalDivider(color: Theme.of(context).dividerColor.withValues(alpha: 0.1), width: 1),
                           _buildHeaderInfo(context, "Status", "ONLINE", color: Colors.green),
-                          VerticalDivider(color: Theme.of(context).dividerColor.withOpacity(0.1), width: 1),
+                          VerticalDivider(color: Theme.of(context).dividerColor.withValues(alpha: 0.1), width: 1),
                           _buildHeaderInfo(context, "Operador", "João Silva"),
                         ],
                       ),
@@ -200,7 +200,7 @@ class _CarroDetalhesScreenState extends ConsumerState<CarroDetalhesScreen> {
                   topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 ),
                 borderData: FlBorderData(show: false),
-                gridData: FlGridData(show: true, drawVerticalLine: false, horizontalInterval: 5, getDrawingHorizontalLine: (v) => FlLine(color: Theme.of(context).dividerColor.withOpacity(0.05))),
+                gridData: FlGridData(show: true, drawVerticalLine: false, horizontalInterval: 5, getDrawingHorizontalLine: (v) => FlLine(color: Theme.of(context).dividerColor.withValues(alpha: 0.05))),
                 barGroups: List.generate(7, (i) => BarChartGroupData(
                   x: i,
                   barRods: [
