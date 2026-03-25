@@ -414,7 +414,7 @@ class _AdminConfiguracoesScreenState extends ConsumerState<AdminConfiguracoesScr
               child: DataTable(
                 headingTextStyle: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5), fontWeight: FontWeight.bold),
                 dataTextStyle: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
-                columns: const [
+                columns: [
                   DataColumn(label: Text("Timestamp", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
                   DataColumn(label: Text("Tipo", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
                   DataColumn(label: Text("Canal", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),

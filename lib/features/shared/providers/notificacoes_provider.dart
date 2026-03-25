@@ -30,6 +30,8 @@ class NotificacoesNotifier extends StateNotifier<List<NotificacaoItem>> {
   NotificacoesNotifier() : super(_initialMock);
 
   static final _initialMock = [
+    NotificacaoItem(id: '6', titulo: 'Cobrança em Atraso', descricao: 'Franqueado João Silva — cobrança em atraso R\$497,00 — venceu em 10/03/2026', isRead: false, timestamp: DateTime.now().subtract(const Duration(hours: 2))),
+    NotificacaoItem(id: '7', titulo: 'Vencimento Próximo', descricao: 'Franqueado Carlos Lima — vencimento amanhã R\$497,00 — vence em 26/03/2026', isRead: false, timestamp: DateTime.now().subtract(const Duration(hours: 3))),
     NotificacaoItem(id: '1', titulo: 'Alerta Rastreamento', descricao: 'TRK-001 desligou às 14:32', isRead: false, timestamp: DateTime.now().subtract(const Duration(minutes: 10))),
     NotificacaoItem(id: '2', titulo: 'Campanha', descricao: 'Campanha Claro atingiu 90% das horas', isRead: false, timestamp: DateTime.now().subtract(const Duration(hours: 1))),
     NotificacaoItem(id: '3', titulo: 'Sistema', descricao: 'Novo franqueado: João Silva', isRead: true, timestamp: DateTime.now().subtract(const Duration(days: 1))),

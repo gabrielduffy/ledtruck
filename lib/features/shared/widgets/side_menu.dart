@@ -56,10 +56,12 @@ class SideMenu extends ConsumerWidget {
                   _MenuTile(label: "Rastreamento", icon: Icons.map_outlined, path: "/admin/rastreamento", isSelected: currentPath.contains("/rastreamento")),
                   _MenuTile(label: "Franqueados", icon: Icons.business_outlined, path: "/admin/franqueados", isSelected: currentPath == "/admin/franqueados"),
                   _MenuTile(label: "Relatórios", icon: Icons.bar_chart_outlined, path: "/admin/relatorios", isSelected: currentPath == "/admin/relatorios"),
+                  _MenuTile(label: "Financeiro", icon: Icons.attach_money_outlined, path: "/admin/financeiro", isSelected: currentPath == "/admin/financeiro"),
                   _MenuTile(label: "Usuários", icon: Icons.people_outline, path: "/admin/usuarios", isSelected: currentPath == "/admin/usuarios"),
                   _MenuTile(label: "Configurações", icon: Icons.settings_outlined, path: "/admin/configuracoes", isSelected: currentPath == "/admin/configuracoes"),
                 ] else if (role == 'franqueado') ...[
                   _MenuTile(label: "Dashboard", icon: Icons.dashboard_outlined, path: "/franqueado/dashboard", isSelected: currentPath == "/franqueado/dashboard"),
+                  _MenuTile(label: "Financeiro", icon: Icons.attach_money_outlined, path: "/franqueado/financeiro", isSelected: currentPath == "/franqueado/financeiro"),
                   _MenuTile(label: "Meus Carros", icon: Icons.directions_car_outlined, path: "/franqueado/carros", isSelected: currentPath == "/franqueado/carros"),
                   _MenuTile(label: "Campanhas", icon: Icons.campaign_outlined, path: "/franqueado/campanhas", isSelected: currentPath == "/franqueado/campanhas"),
                   _MenuTile(label: "Rastreamento", icon: Icons.map_outlined, path: "/franqueado/rastreamento", isSelected: currentPath.contains("/rastreamento")),

@@ -212,3 +212,51 @@ create policy "franqueado ve dos seus carros" on rastreamento
 -- Isso é feito via interface do Supabase ou via SQL:
 alter publication supabase_realtime add table eventos;
 alter publication supabase_realtime add table rastreamento;
+
+-- 9. contratos
+create table contratos (
+  id                uuid default gen_random_uuid() primary key,
+  franqueado_id     uuid references franqueados(id),
+  valor_mensal      decimal(10,2) not null default 497.00,
+  dia_vencimento    integer not null default 10,
+  data_inicio       date not null,
+  carencia_meses    integer default 0,
+  carencia_ate      date,
+  desconto_percent  decimal(5,2) default 0,
+  desconto_ate      date,
+  observacoes       text,
+  ativo             boolean default true,
+  criado_em         timestamptz default now()
+);
+
+-- 10. cobrancas
+create table cobrancas (
+  id              uuid default gen_random_uuid() primary key,
+  contrato_id     uuid references contratos(id),
+  franqueado_id   uuid references franqueados(id),
+  mes_referencia  text not null,
+  data_vencimento date not null,
+  valor_original  decimal(10,2) not null,
+  desconto        decimal(10,2) default 0,
+  valor_final     decimal(10,2) not null,
+  status          text check (status in (
+                    'pendente','pago','atrasado',
+                    'carencia','cancelado'
+                  )) default 'pendente',
+  data_pagamento  date,
+  observacoes     text,
+  criado_em       timestamptz default now()
+);
+
+-- RLS — POLICIES para financeiro (Admin tem acesso total, Franqueado apenas leitura do seu)
+alter table contratos enable row level security;
+create policy "admin gerencia contratos" on contratos
+  for all using (exists (select 1 from perfis where id = auth.uid() and role = 'admin'));
+create policy "franqueado ve seu contrato" on contratos
+  for select using (franqueado_id in (select id from franqueados where user_id = auth.uid()));
+
+alter table cobrancas enable row level security;
+create policy "admin gerencia cobrancas" on cobrancas
+  for all using (exists (select 1 from perfis where id = auth.uid() and role = 'admin'));
+create policy "franqueado ve suas cobrancas" on cobrancas
+  for select using (franqueado_id in (select id from franqueados where user_id = auth.uid()));

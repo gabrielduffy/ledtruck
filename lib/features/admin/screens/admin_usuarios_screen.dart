@@ -161,7 +161,7 @@ class _AdminUsuariosScreenState extends ConsumerState<AdminUsuariosScreen> {
                       scrollDirection: Axis.horizontal,
                       child: DataTable(
                         showCheckboxColumn: false,
-                        columns: const [
+                        columns: [
                           DataColumn(label: Text("Usuário", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
                           DataColumn(label: Text("Role", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
                           DataColumn(label: Text("Franqueado", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),

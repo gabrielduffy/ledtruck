@@ -422,15 +422,32 @@ class _EventsFeed extends StatelessWidget {
       children: [
         Text("FEED DE EVENTOS AO VIVO", style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 16)),
         const SizedBox(height: 16),
-        eventsAsync.when(
-          data: (events) => AppCard(
+          data: (events) {
+            // Injeção de eventos financeiros mockados na listagem de eventos
+            final mockFinanceiro = [
+              {'tipo': 'financeiro_red', 'titulo': 'Financeiro > Cobrança Atrasada', 'texto': 'Cobrança vencida há 7+ dias (João Silva)', 'tempo': 'Há 2h'},
+              {'tipo': 'financeiro_yellow', 'titulo': 'Financeiro > Cobrança Atrasada', 'texto': 'Cobrança vencida há 3 dias (Marcos Silva)', 'tempo': 'Há 5h'},
+            ];
+            
+            return AppCard(
             height: 400,
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: ListView.separated(
-              itemCount: events.length,
+              itemCount: events.length + mockFinanceiro.length,
               separatorBuilder: (context, index) => const Divider(color: Colors.white10, height: 1),
               itemBuilder: (context, index) {
-                final e = events[index];
+                if (index < mockFinanceiro.length) {
+                  final m = mockFinanceiro[index];
+                  bool isRed = m['tipo'] == 'financeiro_red';
+                  return ListTile(
+                    dense: true,
+                    leading: Icon(Icons.warning_amber_rounded, color: isRed ? Colors.redAccent : Colors.amber, size: 16),
+                    title: Text(m['titulo']!, style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: 13, fontWeight: FontWeight.w500)),
+                    subtitle: Text(m['texto']!, style: const TextStyle(color: Color(0xFF7A7A9A), fontSize: 11)),
+                    trailing: Text(m['tempo']!, style: TextStyle(color: isRed ? Colors.redAccent : Colors.amber, fontSize: 10, fontWeight: FontWeight.bold)),
+                  );
+                }
+                final e = events[index - mockFinanceiro.length];
                 return ListTile(
                   dense: true,
                   leading: Icon(

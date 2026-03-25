@@ -202,8 +202,61 @@ class _ModalUsuarioDetalhesState extends State<ModalUsuarioDetalhes> with Single
   }
 }
 
-class ModalNovoUsuario extends StatelessWidget {
+class ModalNovoUsuario extends StatefulWidget {
   const ModalNovoUsuario({super.key});
+
+  @override
+  State<ModalNovoUsuario> createState() => _ModalNovoUsuarioState();
+}
+
+class _ModalNovoUsuarioState extends State<ModalNovoUsuario> {
+  String _role = 'Admin';
+  String _vencimento = '10';
+  int _carencia = 0;
+  double _desconto = 0.0;
+  DateTime _dataInicio = DateTime.now();
+  DateTime? _descontoAte;
+  
+  final _valorCtrl = TextEditingController(text: "497.00");
+  final _obsCtrl = TextEditingController();
+
+  @override
+  void dispose() {
+    _valorCtrl.dispose();
+    _obsCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _pickDate(BuildContext context, bool isInicio) async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: isInicio ? _dataInicio : (_descontoAte ?? DateTime.now()),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.dark(
+              primary: AppTheme.primaryNeon,
+              onPrimary: Colors.white,
+              surface: Color(0xFF1A1A26),
+              onSurface: Colors.white,
+            ),
+            dialogBackgroundColor: const Color(0xFF12121A),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (date != null) {
+      setState(() {
+        if (isInicio) _dataInicio = date;
+        else _descontoAte = date;
+      });
+    }
+  }
+
+  String _formatDate(DateTime d) => "${d.day.toString().padLeft(2,'0')}/${d.month.toString().padLeft(2,'0')}/${d.year}";
 
   @override
   Widget build(BuildContext context) {
@@ -211,10 +264,11 @@ class ModalNovoUsuario extends StatelessWidget {
       backgroundColor: Theme.of(context).cardColor,
       title: Text("Novo Usuário", style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color)),
       content: SizedBox(
-        width: 400,
+        width: 500,
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppTextField(label: "Nome", icon: Icons.person, controller: TextEditingController()),
               const SizedBox(height: 16),
@@ -223,6 +277,7 @@ class ModalNovoUsuario extends StatelessWidget {
               AppTextField(label: "Telefone", icon: Icons.phone, controller: TextEditingController()),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
+                value: _role,
                 decoration: InputDecoration(labelText: "Role", border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                 dropdownColor: Theme.of(context).cardColor,
                 items: const [
@@ -231,18 +286,96 @@ class ModalNovoUsuario extends StatelessWidget {
                   DropdownMenuItem(value: 'Operador', child: Text('Operador')),
                   DropdownMenuItem(value: 'Anunciante', child: Text('Anunciante')),
                 ],
-                onChanged: (v) {},
+                onChanged: (v) => setState(() => _role = v!),
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(labelText: "Franqueado", border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
-                dropdownColor: Theme.of(context).cardColor,
-                items: const [
-                  DropdownMenuItem(value: 'Franqueado SP', child: Text('Franqueado SP')),
-                  DropdownMenuItem(value: 'Sem Vínculo', child: Text('Sem Vínculo')),
+              if (_role != 'Franqueado') 
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(labelText: "Franqueado", border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                  dropdownColor: Theme.of(context).cardColor,
+                  items: const [
+                    DropdownMenuItem(value: 'Franqueado SP', child: Text('Franqueado SP')),
+                    DropdownMenuItem(value: 'Sem Vínculo', child: Text('Sem Vínculo')),
+                  ],
+                  onChanged: (v) {},
+                ),
+                
+              if (_role == 'Franqueado') ...[
+                const SizedBox(height: 24),
+                const Divider(color: Colors.white10),
+                const SizedBox(height: 16),
+                Text("DADOS DO CONTRATO", style: TextStyle(color: AppTheme.primaryNeon, fontWeight: FontWeight.bold, fontSize: 12)),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(child: AppTextField(label: "Valor Mensal (R\$)", icon: Icons.attach_money, controller: _valorCtrl)),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        value: _vencimento,
+                        decoration: InputDecoration(labelText: "Dia Vencimento", border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                        dropdownColor: Theme.of(context).cardColor,
+                        items: List.generate(28, (i) => DropdownMenuItem(value: '${i+1}', child: Text('${i+1}'))),
+                        onChanged: (v) => setState(() => _vencimento = v!),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                InkWell(
+                  onTap: () => _pickDate(context, true),
+                  child: InputDecorator(
+                    decoration: InputDecoration(labelText: "Data Início Cobrança", border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                    child: Text(_formatDate(_dataInicio)),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: DropdownButtonFormField<int>(
+                        value: _carencia,
+                        decoration: InputDecoration(labelText: "Carência (meses)", border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                        dropdownColor: Theme.of(context).cardColor,
+                        items: List.generate(13, (i) => DropdownMenuItem(value: i, child: Text('$i'))),
+                        onChanged: (v) => setState(() => _carencia = v!),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: DropdownButtonFormField<double>(
+                        value: _desconto,
+                        decoration: InputDecoration(labelText: "Desconto (%)", border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                        dropdownColor: Theme.of(context).cardColor,
+                        items: [
+                          const DropdownMenuItem(value: 0.0, child: Text('0%')),
+                          const DropdownMenuItem(value: 10.0, child: Text('10%')),
+                          const DropdownMenuItem(value: 20.0, child: Text('20%')),
+                          const DropdownMenuItem(value: 50.0, child: Text('50%')),
+                          const DropdownMenuItem(value: 100.0, child: Text('100%')),
+                        ],
+                        onChanged: (v) => setState(() => _desconto = v!),
+                      ),
+                    ),
+                  ],
+                ),
+                if (_carencia > 0) ...[
+                  const SizedBox(height: 16),
+                  Text("Carência calculada até: ${_formatDate(DateTime(_dataInicio.year, _dataInicio.month + _carencia, _dataInicio.day))}", style: const TextStyle(color: Colors.blue, fontSize: 12)),
                 ],
-                onChanged: (v) {},
-              ),
+                if (_desconto > 0) ...[
+                  const SizedBox(height: 16),
+                  InkWell(
+                    onTap: () => _pickDate(context, false),
+                    child: InputDecorator(
+                      decoration: InputDecoration(labelText: "Desconto válido até", border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                      child: Text(_descontoAte != null ? _formatDate(_descontoAte!) : "Selecione a data limite"),
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 16),
+                AppTextField(label: "Observações do Contrato", icon: Icons.notes, controller: _obsCtrl),
+              ]
             ],
           ),
         ),
@@ -251,7 +384,7 @@ class ModalNovoUsuario extends StatelessWidget {
         TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancelar", style: TextStyle(color: Colors.grey))),
         AppButton(label: "Salvar", onPressed: () {
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Usuário criado com sucesso! O convite foi enviado.", style: TextStyle(color: Colors.white)), backgroundColor: AppTheme.primaryNeon));
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Usuário e Contrato criados com sucesso!", style: TextStyle(color: Colors.white)), backgroundColor: AppTheme.primaryNeon));
         }),
       ],
     );

@@ -10,7 +10,9 @@ import 'package:led_truck/features/admin/screens/admin_relatorios_screen.dart';
 import 'package:led_truck/features/admin/screens/admin_configuracoes_screen.dart';
 import 'package:led_truck/features/admin/screens/admin_franqueados_screen.dart';
 import 'package:led_truck/features/admin/screens/admin_usuarios_screen.dart';
+import 'package:led_truck/features/admin/screens/admin_financeiro_screen.dart';
 import 'package:led_truck/features/franqueado/screens/franqueado_dashboard_screen.dart';
+import 'package:led_truck/features/franqueado/screens/franqueado_financeiro_screen.dart';
 import 'package:led_truck/features/franqueado/screens/franqueado_carros_screen.dart';
 import 'package:led_truck/features/franqueado/screens/franqueado_campanhas_screen.dart';
 import 'package:led_truck/features/operador/screens/operador_dashboard_screen.dart';
@@ -92,8 +94,16 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const AdminUsuariosScreen(),
       ),
       GoRoute(
+        path: '/admin/financeiro',
+        builder: (context, state) => const AdminFinanceiroScreen(),
+      ),
+      GoRoute(
         path: '/franqueado/dashboard',
         builder: (context, state) => const FranqueadoDashboardScreen(),
+      ),
+      GoRoute(
+        path: '/franqueado/financeiro',
+        builder: (context, state) => const FranqueadoFinanceiroScreen(),
       ),
       GoRoute(
         path: '/franqueado/carros',
