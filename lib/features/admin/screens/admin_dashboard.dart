@@ -422,6 +422,7 @@ class _EventsFeed extends StatelessWidget {
       children: [
         Text("FEED DE EVENTOS AO VIVO", style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 16)),
         const SizedBox(height: 16),
+        eventsAsync.when(
           data: (events) {
             // Injeção de eventos financeiros mockados na listagem de eventos
             final mockFinanceiro = [
@@ -430,51 +431,52 @@ class _EventsFeed extends StatelessWidget {
             ];
             
             return AppCard(
-            height: 400,
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: ListView.separated(
-              itemCount: events.length + mockFinanceiro.length,
-              separatorBuilder: (context, index) => const Divider(color: Colors.white10, height: 1),
-              itemBuilder: (context, index) {
-                if (index < mockFinanceiro.length) {
-                  final m = mockFinanceiro[index];
-                  bool isRed = m['tipo'] == 'financeiro_red';
+              height: 400,
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: ListView.separated(
+                itemCount: events.length + mockFinanceiro.length,
+                separatorBuilder: (context, index) => const Divider(color: Colors.white10, height: 1),
+                itemBuilder: (context, index) {
+                  if (index < mockFinanceiro.length) {
+                    final m = mockFinanceiro[index];
+                    bool isRed = m['tipo'] == 'financeiro_red';
+                    return ListTile(
+                      dense: true,
+                      leading: Icon(Icons.warning_amber_rounded, color: isRed ? Colors.redAccent : Colors.amber, size: 16),
+                      title: Text(m['titulo']!, style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: 13, fontWeight: FontWeight.w500)),
+                      subtitle: Text(m['texto']!, style: const TextStyle(color: Color(0xFF7A7A9A), fontSize: 11)),
+                      trailing: Text(m['tempo']!, style: TextStyle(color: isRed ? Colors.redAccent : Colors.amber, fontSize: 10, fontWeight: FontWeight.bold)),
+                    );
+                  }
+                  final e = events[index - mockFinanceiro.length];
                   return ListTile(
                     dense: true,
-                    leading: Icon(Icons.warning_amber_rounded, color: isRed ? Colors.redAccent : Colors.amber, size: 16),
-                    title: Text(m['titulo']!, style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: 13, fontWeight: FontWeight.w500)),
-                    subtitle: Text(m['texto']!, style: const TextStyle(color: Color(0xFF7A7A9A), fontSize: 11)),
-                    trailing: Text(m['tempo']!, style: TextStyle(color: isRed ? Colors.redAccent : Colors.amber, fontSize: 10, fontWeight: FontWeight.bold)),
-                  );
-                }
-                final e = events[index - mockFinanceiro.length];
-                return ListTile(
-                  dense: true,
-                  leading: Icon(
-                    e.tipo == 'ligou' ? Icons.power : Icons.power_off,
-                    color: e.tipo == 'ligou' ? AppTheme.primaryNeon : Colors.grey,
-                    size: 16,
-                  ),
-                  title: Text(
-                    "${e.franqueadoNome} > ${e.carroCodigo}",
-                    style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: 13, fontWeight: FontWeight.w500),
-                  ),
-                  subtitle: Text(
-                    "${_formatTime(e.timestamp)}${e.duracao != null ? ' | Duração: ${e.duracao}' : ''}",
-                    style: const TextStyle(color: Color(0xFF7A7A9A), fontSize: 11),
-                  ),
-                  trailing: Text(
-                    e.tipo.toUpperCase(),
-                    style: TextStyle(
+                    leading: Icon(
+                      e.tipo == 'ligou' ? Icons.power : Icons.power_off,
                       color: e.tipo == 'ligou' ? AppTheme.primaryNeon : Colors.grey,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
+                      size: 16,
                     ),
-                  ),
-                );
-              },
-            ),
-          ),
+                    title: Text(
+                      "${e.franqueadoNome} > ${e.carroCodigo}",
+                      style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: 13, fontWeight: FontWeight.w500),
+                    ),
+                    subtitle: Text(
+                      "${_formatTime(e.timestamp)}${e.duracao != null ? ' | Duração: ${e.duracao}' : ''}",
+                      style: const TextStyle(color: Color(0xFF7A7A9A), fontSize: 11),
+                    ),
+                    trailing: Text(
+                      e.tipo.toUpperCase(),
+                      style: TextStyle(
+                        color: e.tipo == 'ligou' ? AppTheme.primaryNeon : Colors.grey,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            );
+          },
           loading: () => const AppCard(height: 400, child: Center(child: CircularProgressIndicator())),
           error: (e, s) => AppCard(height: 400, child: Center(child: Text("Erro: $e"))),
         ),
