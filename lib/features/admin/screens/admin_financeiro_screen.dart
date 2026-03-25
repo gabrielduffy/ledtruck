@@ -70,6 +70,53 @@ class _AdminFinanceiroScreenState extends ConsumerState<AdminFinanceiroScreen> w
     );
   }
 
+  void _confirmarCancelarCobranca(Map<String, String> c) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Theme.of(context).cardColor,
+        title: const Text("Cancelar Cobrança"),
+        content: const Text("Tem certeza que deseja cancelar esta cobrança?"),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Não, Voltar", style: TextStyle(color: Colors.grey))),
+          AppButton(label: "Sim, Cancelar", color: Colors.redAccent, onPressed: () {
+            Navigator.pop(ctx);
+            setState(() { c['status'] = 'cancelado'; });
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Cobrança cancelada com sucesso!"), backgroundColor: Colors.redAccent));
+          }),
+        ],
+      ),
+    );
+  }
+
+  void _showModalEditar(String title) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Theme.of(context).cardColor,
+        title: Text(title),
+        content: const Text("Módulo de edição completa será liberado na versão final."),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Fechar", style: TextStyle(color: Colors.grey))),
+        ],
+      ),
+    );
+  }
+
+  void _showModalHistorico(String target) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Theme.of(context).cardColor,
+        title: Text("Histórico: $target"),
+        content: const Text("Nenhuma alteração registrada recentemente."),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Fechar", style: TextStyle(color: Colors.grey))),
+        ],
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -236,6 +283,10 @@ class _AdminFinanceiroScreenState extends ConsumerState<AdminFinanceiroScreen> w
                             _showModalPagar(c);
                           } else if (val == 'recibo') {
                             ExportUtils.exportarPDF(['Descrição', 'Valor'], [['Cobrança LedTruck', _formatCurrency(c['final'])]], "Recibo - ${c['franq']}", "recibo_${c['venc']?.replaceAll('/', '')}");
+                          } else if (val == 'editar') {
+                            _showModalEditar("Editar Cobrança");
+                          } else if (val == 'cancelar') {
+                            _confirmarCancelarCobranca(c);
                           }
                         },
                         itemBuilder: (ctx) => [
@@ -310,6 +361,13 @@ class _AdminFinanceiroScreenState extends ConsumerState<AdminFinanceiroScreen> w
                       DataCell(PopupMenuButton<String>(
                         icon: const Icon(Icons.more_vert),
                         color: Theme.of(context).colorScheme.surface,
+                        onSelected: (val) {
+                          if (val == 'editar') {
+                            _showModalEditar("Editar Contrato");
+                          } else if (val == 'historico') {
+                            _showModalHistorico(c['franq']!);
+                          }
+                        },
                         itemBuilder: (ctx) => const [
                           PopupMenuItem(value: 'editar', child: Text("Editar contrato")),
                           PopupMenuItem(value: 'historico', child: Text("Ver histórico")),
