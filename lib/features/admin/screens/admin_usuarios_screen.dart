@@ -7,6 +7,7 @@ import 'package:led_truck/core/theme/app_theme.dart';
 import 'package:led_truck/core/theme/theme_provider.dart';
 import 'package:led_truck/features/shared/providers/notificacoes_provider.dart';
 import 'package:led_truck/features/admin/widgets/modais_usuarios.dart';
+import 'package:led_truck/features/shared/widgets/support_fab.dart';
 
 class AdminUsuariosScreen extends ConsumerStatefulWidget {
   const AdminUsuariosScreen({super.key});
@@ -45,6 +46,7 @@ class _AdminUsuariosScreenState extends ConsumerState<AdminUsuariosScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       drawer: const SideMenu(),
       endDrawer: const NotificationsDrawer(),
+      floatingActionButton: const SupportFAB(),
       appBar: AppBar(
         title: Text("USUÁRIOS", style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontSize: 20)),
         backgroundColor: Colors.transparent,
@@ -160,11 +162,11 @@ class _AdminUsuariosScreenState extends ConsumerState<AdminUsuariosScreen> {
                       child: DataTable(
                         showCheckboxColumn: false,
                         columns: const [
-                          DataColumn(label: Text("Usuário")),
-                          DataColumn(label: Text("Role")),
-                          DataColumn(label: Text("Franqueado")),
-                          DataColumn(label: Text("Status")),
-                          DataColumn(label: Text("Último Acesso")),
+                          DataColumn(label: Text("Usuário", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                          DataColumn(label: Text("Role", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                          DataColumn(label: Text("Franqueado", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                          DataColumn(label: Text("Status", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                          DataColumn(label: Text("Último Acesso", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
                         ],
                         rows: _usuariosMockados.map((u) => DataRow(
                           onSelectChanged: (_) {

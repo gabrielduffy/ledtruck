@@ -8,6 +8,7 @@ import 'package:led_truck/core/theme/theme_provider.dart';
 import 'package:led_truck/features/shared/providers/notificacoes_provider.dart';
 import 'package:led_truck/features/admin/providers/admin_provider.dart';
 import 'package:led_truck/features/admin/models/admin_models.dart';
+import 'package:led_truck/features/shared/widgets/support_fab.dart';
 
 class AdminFranqueadosScreen extends ConsumerWidget {
   const AdminFranqueadosScreen({super.key});
@@ -50,6 +51,7 @@ class AdminFranqueadosScreen extends ConsumerWidget {
           const SizedBox(width: 16),
         ],
       ),
+      floatingActionButton: const SupportFAB(),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1400),
@@ -61,11 +63,12 @@ class AdminFranqueadosScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Gestão de Franqueados", style: Theme.of(context).textTheme.headlineMedium),
-                    AppButton(
-                      label: "Novo Franqueado",
-                      icon: Icons.business,
-                      onPressed: () {},
+                    Text(
+                      "Gestão de Franqueados", 
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold, 
+                        fontSize: 28,
+                      )
                     ),
                   ],
                 ),
@@ -79,11 +82,11 @@ class AdminFranqueadosScreen extends ConsumerWidget {
                       child: DataTable(
                         columnSpacing: 24,
                         columns: [
-                          DataColumn(label: Text("Nome", style: Theme.of(context).textTheme.bodySmall)),
-                          DataColumn(label: Text("Cidade", style: Theme.of(context).textTheme.bodySmall)),
-                          DataColumn(label: Text("Carros", style: Theme.of(context).textTheme.bodySmall)),
-                          DataColumn(label: Text("Campanhas", style: Theme.of(context).textTheme.bodySmall)),
-                          DataColumn(label: Text("Ações", style: Theme.of(context).textTheme.bodySmall)),
+                          DataColumn(label: Text("Nome", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                          DataColumn(label: Text("Cidade", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                          DataColumn(label: Text("Carros", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                          DataColumn(label: Text("Campanhas", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                          DataColumn(label: Text("Ações", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
                         ],
                         rows: franqueados.map((f) => DataRow(
                           cells: [

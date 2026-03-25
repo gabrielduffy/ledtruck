@@ -13,6 +13,7 @@ import 'package:led_truck/features/admin/widgets/modal_vincular_carro.dart';
 import 'package:led_truck/features/admin/widgets/modal_desvincular_dispositivo.dart';
 import 'package:led_truck/features/admin/widgets/modal_historico_dispositivo.dart';
 import 'package:led_truck/features/admin/widgets/modal_editar_dispositivo.dart';
+import 'package:led_truck/features/shared/widgets/support_fab.dart';
 
 class AdminDispositivosScreen extends ConsumerWidget {
   const AdminDispositivosScreen({super.key});
@@ -27,6 +28,7 @@ class AdminDispositivosScreen extends ConsumerWidget {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       drawer: const SideMenu(),
       endDrawer: const NotificationsDrawer(),
+      floatingActionButton: const SupportFAB(),
       appBar: AppBar(
         title: Text("GESTÃO DE DISPOSITIVOS", style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontSize: 20)),
         backgroundColor: Colors.transparent,
@@ -140,14 +142,14 @@ class AdminDispositivosScreen extends ConsumerWidget {
                       child: DataTable(
                         columnSpacing: 24,
                         columns: [
-                          DataColumn(label: Text("Nº Série", style: Theme.of(context).textTheme.bodySmall)),
-                          DataColumn(label: Text("Modelo", style: Theme.of(context).textTheme.bodySmall)),
-                          DataColumn(label: Text("Firmware", style: Theme.of(context).textTheme.bodySmall)),
-                          DataColumn(label: Text("Status", style: Theme.of(context).textTheme.bodySmall)),
-                          DataColumn(label: Text("Carro Vinculado", style: Theme.of(context).textTheme.bodySmall)),
-                          DataColumn(label: Text("Franqueado", style: Theme.of(context).textTheme.bodySmall)),
-                          DataColumn(label: Text("Instalado em", style: Theme.of(context).textTheme.bodySmall)),
-                          DataColumn(label: Text("Ações", style: Theme.of(context).textTheme.bodySmall)),
+                          DataColumn(label: Text("Nº Série", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                          DataColumn(label: Text("Modelo", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                          DataColumn(label: Text("Firmware", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                          DataColumn(label: Text("Status", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                          DataColumn(label: Text("Carro Vinculado", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                          DataColumn(label: Text("Franqueado", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                          DataColumn(label: Text("Instalado em", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                          DataColumn(label: Text("Ações", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
                         ],
                         rows: dispositivos.map((d) {
                           return DataRow(

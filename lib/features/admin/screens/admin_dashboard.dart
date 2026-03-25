@@ -13,6 +13,7 @@ import 'package:led_truck/core/theme/theme_provider.dart';
 import 'package:led_truck/features/admin/providers/admin_provider.dart';
 import 'package:led_truck/features/admin/models/admin_models.dart';
 import 'package:led_truck/core/utils/date_formatter.dart';
+import 'package:led_truck/features/shared/widgets/support_fab.dart';
 
 class AdminDashboard extends ConsumerWidget {
   const AdminDashboard({super.key});
@@ -28,6 +29,7 @@ class AdminDashboard extends ConsumerWidget {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       drawer: const SideMenu(),
       endDrawer: const NotificationsDrawer(),
+      floatingActionButton: const SupportFAB(),
       appBar: AppBar(
         title: Text("DASHBOARD ADMIN", style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontSize: 20)),
         backgroundColor: Colors.transparent,
@@ -384,11 +386,11 @@ class _FranqueadosTable extends StatelessWidget {
               child: DataTable(
                 columnSpacing: 24,
                 columns: [
-                  DataColumn(label: Text("Nome", style: Theme.of(context).textTheme.bodySmall)),
-                  DataColumn(label: Text("Cidade", style: Theme.of(context).textTheme.bodySmall)),
-                  DataColumn(label: Text("Carros", style: Theme.of(context).textTheme.bodySmall)),
-                  DataColumn(label: Text("Campanhas", style: Theme.of(context).textTheme.bodySmall)),
-                  DataColumn(label: Text("Ações", style: Theme.of(context).textTheme.bodySmall)),
+                  DataColumn(label: Text("Nome", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                  DataColumn(label: Text("Cidade", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                  DataColumn(label: Text("Carros", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                  DataColumn(label: Text("Campanhas", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                  DataColumn(label: Text("Ações", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
                 ],
                 rows: franqueados.map((f) => DataRow(
                   cells: [

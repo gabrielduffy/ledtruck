@@ -5,6 +5,8 @@ import 'package:led_truck/features/shared/widgets/notifications_drawer.dart';
 import 'package:led_truck/features/shared/widgets/base_components.dart';
 import 'package:led_truck/core/theme/app_theme.dart';
 import 'package:led_truck/core/theme/theme_provider.dart';
+import 'package:led_truck/features/shared/widgets/support_fab.dart';
+import 'package:led_truck/core/utils/export_utils.dart';
 
 class AdminConfiguracoesScreen extends ConsumerStatefulWidget {
   const AdminConfiguracoesScreen({super.key});
@@ -373,9 +375,19 @@ class _AdminConfiguracoesScreenState extends ConsumerState<AdminConfiguracoesScr
             children: [
               Text("Auditoria de Sistema", style: Theme.of(context).textTheme.headlineMedium),
               TextButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.download, color: AppTheme.primaryNeon),
-                label: const Text("Exportar CSV", style: TextStyle(color: AppTheme.primaryNeon)),
+                onPressed: () async {
+                  final rows = [
+                    ['Timestamp', 'Tipo', 'Canal', 'Status', 'Mensagem'],
+                    ['24/03/2026 23:01', 'Relatório Env', 'WhatsApp', 'sucesso', 'Enviado a 551199999999'],
+                    ['24/03/2026 23:00', 'Relatório Env', 'E-mail', 'sucesso', 'Enviado a user@test.com'],
+                    ['24/03/2026 18:30', 'Sem Sinal', 'WhatsApp', 'falha', 'Timeout API Z-API'],
+                    ['24/03/2026 14:20', 'Painel Ligou', 'Sistema', 'sucesso', 'Trigger acionada'],
+                  ];
+                  await ExportUtils.exportarCSV(rows, "auditoria_sistema");
+                  if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("CSV de Auditoria gerado!"), backgroundColor: AppTheme.primaryNeon));
+                },
+                icon: const Icon(Icons.download, color: AppTheme.primaryNeon, size: 24),
+                label: const Text("Exportar CSV", style: TextStyle(color: AppTheme.primaryNeon, fontWeight: FontWeight.bold, fontSize: 16)),
               )
             ],
           ),
@@ -403,12 +415,12 @@ class _AdminConfiguracoesScreenState extends ConsumerState<AdminConfiguracoesScr
                 headingTextStyle: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5), fontWeight: FontWeight.bold),
                 dataTextStyle: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
                 columns: const [
-                  DataColumn(label: Text("Timestamp")),
-                  DataColumn(label: Text("Tipo")),
-                  DataColumn(label: Text("Canal")),
-                  DataColumn(label: Text("Status")),
-                  DataColumn(label: Text("Mensagem")),
-                  DataColumn(label: Text("Ações")),
+                  DataColumn(label: Text("Timestamp", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                  DataColumn(label: Text("Tipo", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                  DataColumn(label: Text("Canal", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                  DataColumn(label: Text("Status", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                  DataColumn(label: Text("Mensagem", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                  DataColumn(label: Text("Ações", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
                 ],
                 rows: [
                   _logRow("24/03/2026 23:01", "Relatório Env", "WhatsApp", "sucesso", "Enviado a 551199999999", Colors.green, Icons.chat),
@@ -463,6 +475,7 @@ class _AdminConfiguracoesScreenState extends ConsumerState<AdminConfiguracoesScr
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       drawer: const SideMenu(),
       endDrawer: const NotificationsDrawer(),
+      floatingActionButton: const SupportFAB(),
       appBar: AppBar(
         title: Text("CONFIGURAÇÕES", style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontSize: 20)),
         backgroundColor: Colors.transparent,

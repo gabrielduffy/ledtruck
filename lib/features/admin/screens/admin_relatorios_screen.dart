@@ -6,6 +6,8 @@ import 'package:led_truck/features/shared/widgets/notifications_drawer.dart';
 import 'package:led_truck/features/shared/widgets/base_components.dart';
 import 'package:led_truck/core/theme/app_theme.dart';
 import 'package:led_truck/core/theme/theme_provider.dart';
+import 'package:led_truck/features/shared/widgets/support_fab.dart';
+import 'package:led_truck/core/utils/export_utils.dart';
 
 class AdminRelatoriosScreen extends ConsumerStatefulWidget {
   const AdminRelatoriosScreen({super.key});
@@ -15,16 +17,34 @@ class AdminRelatoriosScreen extends ConsumerStatefulWidget {
 }
 
 class _AdminRelatoriosScreenState extends ConsumerState<AdminRelatoriosScreen> {
-  void _exportarPDF() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("✨ Exportando PDF... (Em breve PDF via package pdf/printing)"), backgroundColor: AppTheme.primaryNeon),
-    );
+  void _exportarPDF() async {
+    final headers = ['Dia', 'Horas de Exibição'];
+    final rows = [
+      ['Segunda', '45'],
+      ['Terça', '60'],
+      ['Quarta', '55'],
+      ['Quinta', '80'],
+      ['Sexta', '75'],
+      ['Sábado', '120'],
+      ['Domingo', '95'],
+    ];
+    await ExportUtils.exportarPDF(headers, rows, "Desempenho da Rede - Horas", "relatorio_desempenho");
+    if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("PDF exportado!"), backgroundColor: AppTheme.primaryNeon));
   }
 
-  void _exportarCSV() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("✨ Exportando CSV... (Em breve via package csv)"), backgroundColor: AppTheme.primaryNeon),
-    );
+  void _exportarCSV() async {
+    final rows = [
+      ['Dia', 'Horas de Exibição'],
+      ['Segunda', '45'],
+      ['Terça', '60'],
+      ['Quarta', '55'],
+      ['Quinta', '80'],
+      ['Sexta', '75'],
+      ['Sábado', '120'],
+      ['Domingo', '95'],
+    ];
+    await ExportUtils.exportarCSV(rows, "relatorio_desempenho");
+    if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("CSV exportado!"), backgroundColor: AppTheme.primaryNeon));
   }
 
   @override
@@ -33,6 +53,7 @@ class _AdminRelatoriosScreenState extends ConsumerState<AdminRelatoriosScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       drawer: const SideMenu(),
       endDrawer: const NotificationsDrawer(),
+      floatingActionButton: const SupportFAB(),
       appBar: AppBar(
         title: Text("RELATÓRIOS", style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontSize: 20)),
         backgroundColor: Colors.transparent,
@@ -76,8 +97,8 @@ class _AdminRelatoriosScreenState extends ConsumerState<AdminRelatoriosScreen> {
                   children: [
                     TextButton.icon(
                       onPressed: _exportarCSV,
-                      icon: const Icon(Icons.table_chart, color: AppTheme.primaryNeon),
-                      label: const Text("Exportar CSV", style: TextStyle(color: AppTheme.primaryNeon)),
+                      icon: const Icon(Icons.table_chart, color: AppTheme.primaryNeon, size: 24),
+                      label: const Text("Exportar CSV", style: TextStyle(color: AppTheme.primaryNeon, fontWeight: FontWeight.bold, fontSize: 16)),
                     ),
                     const SizedBox(width: 16),
                     AppButton(

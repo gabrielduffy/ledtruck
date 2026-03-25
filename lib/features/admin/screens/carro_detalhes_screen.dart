@@ -6,6 +6,8 @@ import 'package:led_truck/features/shared/widgets/notifications_drawer.dart';
 import 'package:led_truck/features/shared/widgets/base_components.dart';
 import 'package:led_truck/core/theme/app_theme.dart';
 import 'package:led_truck/core/theme/theme_provider.dart';
+import 'package:led_truck/features/shared/widgets/support_fab.dart';
+import 'package:led_truck/core/utils/export_utils.dart';
 
 class CarroDetalhesScreen extends ConsumerStatefulWidget {
   final String id;
@@ -26,6 +28,7 @@ class _CarroDetalhesScreenState extends ConsumerState<CarroDetalhesScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       drawer: const SideMenu(),
       endDrawer: const NotificationsDrawer(),
+      floatingActionButton: const SupportFAB(),
       appBar: AppBar(
         title: Text("DETALHES DO VEÍCULO: ${widget.id}", style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontSize: 18)),
         backgroundColor: Colors.transparent,
@@ -121,10 +124,10 @@ class _CarroDetalhesScreenState extends ConsumerState<CarroDetalhesScreen> {
                   child: DataTable(
                     columnSpacing: 24,
                     columns: [
-                      DataColumn(label: Text("Data/Hora", style: Theme.of(context).textTheme.bodySmall)),
-                      DataColumn(label: Text("Tipo", style: Theme.of(context).textTheme.bodySmall)),
-                      DataColumn(label: Text("Duração", style: Theme.of(context).textTheme.bodySmall)),
-                      DataColumn(label: Text("Localização", style: Theme.of(context).textTheme.bodySmall)),
+                      DataColumn(label: Text("Data/Hora", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                      DataColumn(label: Text("Tipo", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                      DataColumn(label: Text("Duração", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
+                      DataColumn(label: Text("Localização", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, fontSize: 14))),
                     ],
                     rows: List.generate(5, (i) => DataRow(cells: [
                       DataCell(Text("24/03/2026 14:20", style: Theme.of(context).textTheme.bodyMedium)),
@@ -235,7 +238,17 @@ class _CarroDetalhesScreenState extends ConsumerState<CarroDetalhesScreen> {
           const SizedBox(height: 32),
           AppButton(label: "VER ROTA NO MAPA", icon: Icons.map, isFullWidth: true, onPressed: () {}),
           const SizedBox(height: 16),
-          AppButton(label: "EXPORTAR CSV", icon: Icons.download, isSecondary: true, isFullWidth: true, onPressed: () {}),
+          AppButton(label: "EXPORTAR CSV", icon: Icons.download, isSecondary: true, isFullWidth: true, onPressed: () async {
+            final head = ['Data/Hora', 'Tipo', 'Duração', 'Localização'];
+            final baseRow = ['24/03/2026 14:20', '', '4h 12m', 'Av. Paulista, 1000'];
+            final rows = [head]..addAll(List.generate(5, (i) {
+                final row = List<String>.from(baseRow);
+                row[1] = i % 2 == 0 ? "LIGOU" : "DESLIGOU";
+                return row;
+            }));
+            await ExportUtils.exportarCSV(rows, "historico_carro_${widget.id}");
+            if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("CSV Histórico exportado!"), backgroundColor: AppTheme.primaryNeon));
+          }),
           const SizedBox(height: 16),
           AppButton(label: "VER OPERADOR", icon: Icons.person, isSecondary: true, isFullWidth: true, onPressed: () {}),
         ],
