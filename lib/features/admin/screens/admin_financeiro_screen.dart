@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:led_truck/core/theme/app_theme.dart';
 import 'package:led_truck/core/theme/theme_provider.dart';
 import 'package:led_truck/features/shared/widgets/base_components.dart';
@@ -33,6 +34,41 @@ class _AdminFinanceiroScreenState extends ConsumerState<AdminFinanceiroScreen> w
     {'franq': 'Franqueado 2', 'valor': '397.00', 'venc': '15', 'inicio': '01/03/2026', 'carencia': '30/06/2026', 'desc': 'R\$ 100,00', 'status': 'Ativo'},
     {'franq': 'Franqueado 3', 'valor': '497.00', 'venc': '05', 'inicio': '15/12/2025', 'carencia': '-', 'desc': '-', 'status': 'Ativo'},
   ];
+
+  String _formatCurrency(dynamic value) {
+    if (value == null) return '';
+    if (value.toString().contains('R\$')) return value.toString(); // fall-back para descontos hardcoded
+    final doubleVal = double.tryParse(value.toString()) ?? 0.0;
+    return NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(doubleVal);
+  }
+
+  void _showModalPagar(Map<String, String> c) {
+    final dateCtrl = TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
+    final obsCtrl = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Theme.of(context).cardColor,
+        title: const Text("Confirmar Pagamento"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AppTextField(label: "Data do Pagamento", icon: Icons.calendar_today, controller: dateCtrl),
+            const SizedBox(height: 16),
+            AppTextField(label: "Observações", icon: Icons.notes, controller: obsCtrl),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Cancelar", style: TextStyle(color: Colors.grey))),
+          AppButton(label: "Confirmar pagamento", color: Colors.green, onPressed: () {
+            Navigator.pop(ctx);
+            setState(() { c['status'] = 'pago'; });
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Pagamento confirmado com sucesso!"), backgroundColor: Colors.green));
+          }),
+        ],
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -103,11 +139,11 @@ class _AdminFinanceiroScreenState extends ConsumerState<AdminFinanceiroScreen> w
   Widget _buildResumoCards() {
     return Row(
       children: [
-        _kpiCard("Receita do Mês", "R\$ 1.491,00", Icons.trending_up, Colors.green),
+        _kpiCard("Receita do Mês", _formatCurrency("1491.00"), Icons.trending_up, Colors.green),
         const SizedBox(width: 16),
-        _kpiCard("A Receber", "R\$ 497,00", Icons.schedule, Colors.amber),
+        _kpiCard("A Receber", _formatCurrency("497.00"), Icons.schedule, Colors.amber),
         const SizedBox(width: 16),
-        _kpiCard("Em Atraso", "R\$ 497,00", Icons.warning, Colors.redAccent),
+        _kpiCard("Em Atraso", _formatCurrency("497.00"), Icons.warning, Colors.redAccent),
         const SizedBox(width: 16),
         _kpiCard("Contratos Ativos", "3", Icons.description, AppTheme.primaryNeon),
       ],
@@ -188,22 +224,22 @@ class _AdminFinanceiroScreenState extends ConsumerState<AdminFinanceiroScreen> w
                       DataCell(Text(c['franq']!)),
                       DataCell(Text(c['mes']!)),
                       DataCell(Text(c['venc']!)),
-                      DataCell(Text('R\$ ${c['valor']}')),
-                      DataCell(Text('R\$ ${c['desc']}')),
-                      DataCell(Text('R\$ ${c['final']}', style: const TextStyle(fontWeight: FontWeight.bold))),
+                      DataCell(Text(_formatCurrency(c['valor']))),
+                      DataCell(Text(_formatCurrency(c['desc']))),
+                      DataCell(Text(_formatCurrency(c['final']), style: const TextStyle(fontWeight: FontWeight.bold))),
                       DataCell(_buildStatus(c['status']!)),
                       DataCell(PopupMenuButton<String>(
                         icon: const Icon(Icons.more_vert),
                         color: Theme.of(context).colorScheme.surface,
                         onSelected: (val) {
                           if (val == 'pago') {
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Marcado como pago!"), backgroundColor: Colors.green));
+                            _showModalPagar(c);
                           } else if (val == 'recibo') {
-                            ExportUtils.exportarPDF(['Descricao', 'Valor'], [['Cobrança LedTruck', c['final']!]], "Recibo - ${c['franq']}", "recibo_${c['venc']?.replaceAll('/', '')}");
+                            ExportUtils.exportarPDF(['Descrição', 'Valor'], [['Cobrança LedTruck', _formatCurrency(c['final'])]], "Recibo - ${c['franq']}", "recibo_${c['venc']?.replaceAll('/', '')}");
                           }
                         },
                         itemBuilder: (ctx) => [
-                          if (c['status'] != 'pago') const PopupMenuItem(value: 'pago', child: Text("Marcar como pago", style: TextStyle(color: Colors.green))),
+                          if (c['status'] != 'pago') PopupMenuItem(value: 'pago', child: Row(children: const [Icon(Icons.check, color: Colors.green, size: 20), SizedBox(width: 8), Text("Marcar como pago", style: TextStyle(color: Colors.green))])),
                           if (c['status'] == 'pago') const PopupMenuItem(value: 'recibo', child: Text("Gerar recibo PDF")),
                           const PopupMenuItem(value: 'editar', child: Text("Editar")),
                           const PopupMenuItem(value: 'cancelar', child: Text("Cancelar cobrança", style: TextStyle(color: Colors.redAccent))),
@@ -265,7 +301,7 @@ class _AdminFinanceiroScreenState extends ConsumerState<AdminFinanceiroScreen> w
                   rows: _contratosMock.map((c) => DataRow(
                     cells: [
                       DataCell(Text(c['franq']!)),
-                      DataCell(Text('R\$ ${c['valor']}')),
+                      DataCell(Text(_formatCurrency(c['valor']))),
                       DataCell(Text(c['venc']!)),
                       DataCell(Text(c['inicio']!)),
                       DataCell(Text(c['carencia']!)),
@@ -303,13 +339,26 @@ class _AdminFinanceiroScreenState extends ConsumerState<AdminFinanceiroScreen> w
               Row(
                 children: [
                   TextButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      ExportUtils.exportarPDF(
+                        ['Mês', 'Valor Arrecadado'],
+                        [['Out', _formatCurrency(1200)], ['Nov', _formatCurrency(1400)], ['Dez', _formatCurrency(2100)], ['Jan', _formatCurrency(1800)], ['Fev', _formatCurrency(1491)], ['Mar', _formatCurrency(994)]],
+                        "Relatório Financeiro", 
+                        "relatorio_financeiro"
+                      );
+                    },
                     icon: const Icon(Icons.picture_as_pdf, color: AppTheme.primaryNeon),
                     label: const Text("Exportar PDF", style: TextStyle(color: AppTheme.primaryNeon, fontWeight: FontWeight.bold)),
                   ),
                   const SizedBox(width: 8),
                   TextButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      ExportUtils.exportarCSV(
+                        ['Mês', 'Valor Arrecadado'],
+                        [['Out', _formatCurrency(1200)], ['Nov', _formatCurrency(1400)], ['Dez', _formatCurrency(2100)], ['Jan', _formatCurrency(1800)], ['Fev', _formatCurrency(1491)], ['Mar', _formatCurrency(994)]],
+                        "relatorio_financeiro"
+                      );
+                    },
                     icon: const Icon(Icons.table_chart, color: AppTheme.primaryNeon),
                     label: const Text("Exportar CSV", style: TextStyle(color: AppTheme.primaryNeon, fontWeight: FontWeight.bold)),
                   ),
@@ -324,8 +373,16 @@ class _AdminFinanceiroScreenState extends ConsumerState<AdminFinanceiroScreen> w
               child: BarChart(
                 BarChartData(
                   alignment: BarChartAlignment.spaceAround,
-                  maxY: 5000,
-                  barTouchData: BarTouchData(enabled: false),
+                  maxY: 2520, // 2100 * 1.2
+                  barTouchData: BarTouchData(
+                    enabled: true,
+                    touchTooltipData: BarTouchTooltipData(
+                      getTooltipColor: (_) => Colors.transparent,
+                      tooltipPadding: EdgeInsets.zero,
+                      tooltipMargin: 4,
+                      getTooltipItem: (group, groupIndex, rod, rodIndex) => BarTooltipItem(rod.toY.toInt().toString(), TextStyle(color: Theme.of(context).textTheme.bodySmall?.color, fontWeight: FontWeight.bold, fontSize: 10)),
+                    )
+                  ),
                   titlesData: FlTitlesData(
                     show: true,
                     bottomTitles: AxisTitles(
@@ -333,23 +390,32 @@ class _AdminFinanceiroScreenState extends ConsumerState<AdminFinanceiroScreen> w
                         showTitles: true,
                         getTitlesWidget: (val, meta) {
                           const titles = ['Out', 'Nov', 'Dez', 'Jan', 'Fev', 'Mar'];
-                          return Padding(padding: const EdgeInsets.only(top: 8), child: Text(titles[val.toInt()]));
+                          if (val.toInt() >= 0 && val.toInt() < titles.length) {
+                             return Padding(padding: const EdgeInsets.only(top: 8), child: Text(titles[val.toInt()]));
+                          }
+                          return const SizedBox.shrink();
                         },
                       ),
                     ),
-                    leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 40,
+                        getTitlesWidget: (val, meta) => Text(val.toInt().toString(), style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                      ),
+                    ),
                     topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                     rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                   ),
                   gridData: const FlGridData(show: false),
                   borderData: FlBorderData(show: false),
                   barGroups: [
-                    BarChartGroupData(x: 0, barRods: [BarChartRodData(toY: 1200, color: AppTheme.primaryNeon, width: 22, borderRadius: BorderRadius.circular(4))]),
-                    BarChartGroupData(x: 1, barRods: [BarChartRodData(toY: 1400, color: AppTheme.primaryNeon, width: 22, borderRadius: BorderRadius.circular(4))]),
-                    BarChartGroupData(x: 2, barRods: [BarChartRodData(toY: 2100, color: AppTheme.primaryNeon, width: 22, borderRadius: BorderRadius.circular(4))]),
-                    BarChartGroupData(x: 3, barRods: [BarChartRodData(toY: 1800, color: AppTheme.primaryNeon, width: 22, borderRadius: BorderRadius.circular(4))]),
-                    BarChartGroupData(x: 4, barRods: [BarChartRodData(toY: 1491, color: AppTheme.primaryNeon, width: 22, borderRadius: BorderRadius.circular(4))]),
-                    BarChartGroupData(x: 5, barRods: [BarChartRodData(toY: 994, color: AppTheme.primaryNeon, width: 22, borderRadius: BorderRadius.circular(4))]),
+                    BarChartGroupData(x: 0, showingTooltipIndicators: [0], barRods: [BarChartRodData(toY: 1200, color: AppTheme.primaryNeon, width: 30, borderRadius: BorderRadius.circular(4))]),
+                    BarChartGroupData(x: 1, showingTooltipIndicators: [0], barRods: [BarChartRodData(toY: 1400, color: AppTheme.primaryNeon, width: 30, borderRadius: BorderRadius.circular(4))]),
+                    BarChartGroupData(x: 2, showingTooltipIndicators: [0], barRods: [BarChartRodData(toY: 2100, color: AppTheme.primaryNeon, width: 30, borderRadius: BorderRadius.circular(4))]),
+                    BarChartGroupData(x: 3, showingTooltipIndicators: [0], barRods: [BarChartRodData(toY: 1800, color: AppTheme.primaryNeon, width: 30, borderRadius: BorderRadius.circular(4))]),
+                    BarChartGroupData(x: 4, showingTooltipIndicators: [0], barRods: [BarChartRodData(toY: 1491, color: AppTheme.primaryNeon, width: 30, borderRadius: BorderRadius.circular(4))]),
+                    BarChartGroupData(x: 5, showingTooltipIndicators: [0], barRods: [BarChartRodData(toY: 994, color: AppTheme.primaryNeon, width: 30, borderRadius: BorderRadius.circular(4))]),
                   ],
                 ),
               ),
@@ -358,7 +424,7 @@ class _AdminFinanceiroScreenState extends ConsumerState<AdminFinanceiroScreen> w
           const SizedBox(height: 24),
           Row(
             children: [
-              _kpiCard("Total Recebido Ano", "R\$ 8.985,00", Icons.account_balance_wallet, Colors.green),
+              _kpiCard("Total Recebido Ano", _formatCurrency("8985.00"), Icons.account_balance_wallet, Colors.green),
               const SizedBox(width: 16),
               _kpiCard("Inadimplência", "12.5%", Icons.trending_down, Colors.redAccent),
             ],

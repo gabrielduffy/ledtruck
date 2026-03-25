@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:led_truck/core/theme/app_theme.dart';
 import 'package:led_truck/core/theme/theme_provider.dart';
 import 'package:led_truck/features/shared/widgets/base_components.dart';
@@ -21,6 +22,12 @@ class _FranqueadoFinanceiroScreenState extends ConsumerState<FranqueadoFinanceir
     {'mes': '03/2026', 'venc': '10/03/2026', 'valor': '497.00', 'status': 'pago'},
     {'mes': '02/2026', 'venc': '10/02/2026', 'valor': '497.00', 'status': 'pago'},
   ];
+
+  String _formatCurrency(dynamic value) {
+    if (value == null) return '';
+    final doubleVal = double.tryParse(value.toString()) ?? 0.0;
+    return NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(doubleVal);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +104,7 @@ class _FranqueadoFinanceiroScreenState extends ConsumerState<FranqueadoFinanceir
       children: [
         _kpiCard("Próximo Vencimento", "10/04/2026", Icons.date_range, Colors.blue),
         const SizedBox(width: 16),
-        _kpiCard("Valor", "R\$ 497,00", Icons.attach_money, Colors.green),
+        _kpiCard("Valor", _formatCurrency("497.00"), Icons.attach_money, Colors.green),
         const SizedBox(width: 16),
         _kpiCard("Status Atual", "EM DIA", Icons.check_circle, Colors.green),
       ],
@@ -150,12 +157,12 @@ class _FranqueadoFinanceiroScreenState extends ConsumerState<FranqueadoFinanceir
               cells: [
                 DataCell(Text(c['mes']!)),
                 DataCell(Text(c['venc']!)),
-                DataCell(Text('R\$ ${c['valor']}', style: const TextStyle(fontWeight: FontWeight.bold))),
+                DataCell(Text(_formatCurrency(c['valor']), style: const TextStyle(fontWeight: FontWeight.bold))),
                 DataCell(_buildStatus(c['status']!)),
                 DataCell(
                   c['status'] == 'pago' ? TextButton.icon(
                     onPressed: () {
-                      ExportUtils.exportarPDF(['Descrição', 'Valor'], [['Cobrança LedTruck', c['valor']!]], "Recibo", "recibo_${c['venc']?.replaceAll('/', '')}");
+                      ExportUtils.exportarPDF(['Descrição', 'Valor'], [['Cobrança LedTruck', _formatCurrency(c['valor'])]], "Recibo", "recibo_${c['venc']?.replaceAll('/', '')}");
                     },
                     icon: const Icon(Icons.picture_as_pdf, color: AppTheme.primaryNeon, size: 20),
                     label: const Text("Ver Recibo", style: TextStyle(color: AppTheme.primaryNeon, fontWeight: FontWeight.bold)),
@@ -198,7 +205,7 @@ class _FranqueadoFinanceiroScreenState extends ConsumerState<FranqueadoFinanceir
           ),
           const Divider(color: Colors.white10),
           const SizedBox(height: 8),
-          _infoRow("Valor Mensal Atual:", "R\$ 497,00"),
+          _infoRow("Valor Mensal Atual:", _formatCurrency("497.00")),
           _infoRow("Dia de Vencimento:", "Dia 10"),
           _infoRow("Desconto Ativo:", "Nenhum"),
           _infoRow("Carência Ativa:", "Nenhuma"),
