@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:led_truck/core/utils/date_formatter.dart';
 import 'package:led_truck/features/admin/models/dispositivo_model.dart';
 import 'package:led_truck/features/admin/providers/dispositivos_provider.dart';
 
@@ -30,8 +30,8 @@ class ModalHistoricoDispositivo extends ConsumerWidget {
                 separatorBuilder: (_, __) => const Divider(color: Colors.white10),
                 itemBuilder: (context, index) {
                   final h = historico[index];
-                  final installStr = DateFormat('dd/MM/yyyy HH:mm').format(h.dataInstalacao);
-                  final removeStr = DateFormat('dd/MM/yyyy HH:mm').format(h.dataRemocao);
+                  final installStr = DateFormatter.dateTime(h.dataInstalacao);
+                  final removeStr = DateFormatter.dateTime(h.dataRemocao);
                   final duracao = h.dataRemocao.difference(h.dataInstalacao).inDays;
 
                   return ListTile(

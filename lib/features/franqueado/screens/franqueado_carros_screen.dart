@@ -106,6 +106,40 @@ class FranqueadoCarrosScreen extends ConsumerWidget {
     );
   }
 
+  void _openEditarCarroModal(BuildContext context, String code, String veiculo, String placa, String operador) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Theme.of(ctx).cardColor,
+        title: Text("Editar Carro", style: TextStyle(color: Theme.of(ctx).textTheme.bodyLarge?.color)),
+        content: SingleChildScrollView(
+          child: SizedBox(
+            width: 400,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AppTextField(label: "Veículo", icon: Icons.directions_car, controller: TextEditingController(text: veiculo)),
+                const SizedBox(height: 16),
+                AppTextField(label: "Placa", icon: Icons.badge, controller: TextEditingController(text: placa)),
+                const SizedBox(height: 16),
+                AppTextField(label: "Cidade", icon: Icons.location_city, controller: TextEditingController(text: "São Paulo")),
+                const SizedBox(height: 16),
+                AppTextField(label: "Operador Atribuído", icon: Icons.person, controller: TextEditingController(text: operador)),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Cancelar", style: TextStyle(color: Colors.grey))),
+          AppButton(label: "Salvar", onPressed: () {
+            Navigator.pop(ctx);
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Carro atualizado com sucesso!", style: TextStyle(color: Colors.white)), backgroundColor: AppTheme.primaryNeon));
+          }),
+        ],
+      )
+    );
+  }
+
   DataRow _carroRow(BuildContext context, String code, String veiculo, String placa, String status, String operador, String tempo) {
     bool isOnline = status == "Online";
     return DataRow(cells: [
@@ -121,6 +155,11 @@ class FranqueadoCarrosScreen extends ConsumerWidget {
       DataCell(Text(tempo)),
       DataCell(Row(
         children: [
+          IconButton(
+            icon: const Icon(Icons.edit, color: Colors.amber, size: 20),
+            tooltip: "Editar Carro",
+            onPressed: () => _openEditarCarroModal(context, code, veiculo, placa, operador),
+          ),
           IconButton(icon: const Icon(Icons.map, color: AppTheme.primaryNeon, size: 20), onPressed: () => context.go('/franqueado/rastreamento'), tooltip: "Ver Rota"),
           IconButton(icon: const Icon(Icons.campaign, color: Colors.blue, size: 20), onPressed: () => context.go('/franqueado/campanhas'), tooltip: "Ver Campanhas"),
         ],

@@ -125,11 +125,45 @@ class FranqueadoCampanhasScreen extends ConsumerWidget {
       )),
       DataCell(Row(
         children: [
-          IconButton(icon: const Icon(Icons.edit, color: Colors.amber, size: 20), onPressed: () {}, tooltip: "Editar"),
+          IconButton(icon: const Icon(Icons.edit, color: Colors.amber, size: 20), onPressed: () => _openEditarCampanhaModal(context, nome, horas, periodo, carros), tooltip: "Editar"),
           IconButton(icon: const Icon(Icons.delete, color: Colors.red, size: 20), onPressed: () {}, tooltip: "Remover"),
         ],
       )),
     ]);
+  }
+
+  void _openEditarCampanhaModal(BuildContext context, String nome, String horas, String datas, int carros) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Theme.of(ctx).cardColor,
+        title: Text("Editar Campanha", style: TextStyle(color: Theme.of(ctx).textTheme.bodyLarge?.color)),
+        content: SingleChildScrollView(
+          child: SizedBox(
+            width: 400,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AppTextField(label: "Nome do Anunciante", icon: Icons.business, controller: TextEditingController(text: nome)),
+                const SizedBox(height: 16),
+                AppTextField(label: "Horas Contratadas", icon: Icons.timer, controller: TextEditingController(text: horas.contains(' / ') ? horas.split(' / ')[1] : horas)),
+                const SizedBox(height: 16),
+                AppTextField(label: "Período (Datas)", icon: Icons.calendar_today, controller: TextEditingController(text: datas)),
+                const SizedBox(height: 16),
+                AppTextField(label: "Nº de Carros", icon: Icons.directions_car, controller: TextEditingController(text: carros.toString())),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Cancelar", style: TextStyle(color: Colors.grey))),
+          AppButton(label: "Salvar", onPressed: () {
+            Navigator.pop(ctx);
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Campanha atualizada com sucesso!", style: TextStyle(color: Colors.white)), backgroundColor: AppTheme.primaryNeon));
+          }),
+        ],
+      )
+    );
   }
 
   void _openNovaCampanhaModal(BuildContext context) {

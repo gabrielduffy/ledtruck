@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:led_truck/core/utils/date_formatter.dart';
 import 'package:led_truck/features/shared/widgets/base_components.dart';
 import 'package:led_truck/features/shared/widgets/side_menu.dart';
 import 'package:led_truck/features/shared/widgets/notifications_drawer.dart';
@@ -12,6 +12,7 @@ import 'package:led_truck/features/admin/widgets/modal_cadastrar_dispositivo.dar
 import 'package:led_truck/features/admin/widgets/modal_vincular_carro.dart';
 import 'package:led_truck/features/admin/widgets/modal_desvincular_dispositivo.dart';
 import 'package:led_truck/features/admin/widgets/modal_historico_dispositivo.dart';
+import 'package:led_truck/features/admin/widgets/modal_editar_dispositivo.dart';
 
 class AdminDispositivosScreen extends ConsumerWidget {
   const AdminDispositivosScreen({super.key});
@@ -52,7 +53,8 @@ class AdminDispositivosScreen extends ConsumerWidget {
           const SizedBox(width: 16),
         ],
       ),
-      body: Center(
+      body: Align(
+        alignment: Alignment.topCenter,
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1400),
           child: SingleChildScrollView(
@@ -156,13 +158,17 @@ class AdminDispositivosScreen extends ConsumerWidget {
                               DataCell(_buildStatusBadge(d.status)),
                               DataCell(Text(d.carroVinculado ?? '-', style: Theme.of(context).textTheme.bodyMedium)),
                               DataCell(Text(d.franqueadoNome ?? '-', style: Theme.of(context).textTheme.bodyMedium)),
-                              DataCell(Text(d.instaladoEm != null ? DateFormat('dd/MM/yyyy').format(d.instaladoEm!) : '-', style: Theme.of(context).textTheme.bodyMedium)),
+                              DataCell(Text(d.instaladoEm != null ? DateFormatter.date(d.instaladoEm!) : '-', style: Theme.of(context).textTheme.bodyMedium)),
                               DataCell(
                                 PopupMenuButton<String>(
                                   icon: const Icon(Icons.more_vert),
                                   color: isDark ? const Color(0xFF1A1A26) : Colors.white,
                                   onSelected: (action) => _handleAction(context, action, d),
                                   itemBuilder: (context) => [
+                                    PopupMenuItem(
+                                      value: 'editar',
+                                      child: Text('Editar', style: TextStyle(color: isDark ? Colors.white : const Color(0xFF0D0D1A))),
+                                    ),
                                     if (d.status == 'estoque' || d.status == 'manutencao')
                                       PopupMenuItem(
                                         value: 'vincular',
@@ -228,7 +234,15 @@ class AdminDispositivosScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final modalBg = isDark ? const Color(0xFF12121A) : Colors.white;
 
-    if (action == 'vincular') {
+    if (action == 'editar') {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: modalBg,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+        builder: (_) => ModalEditarDispositivo(dispositivo: d),
+      );
+    } else if (action == 'vincular') {
       showModalBottomSheet(
         context: context,
         isScrollControlled: true,

@@ -7,8 +7,9 @@ import 'package:led_truck/features/admin/screens/admin_dashboard.dart';
 import 'package:led_truck/features/admin/screens/admin_dispositivos_screen.dart';
 import 'package:led_truck/features/admin/screens/rastreamento_screen.dart';
 import 'package:led_truck/features/admin/screens/admin_relatorios_screen.dart';
-import 'package:led_truck/features/admin/screens/admin_integracoes_screen.dart';
 import 'package:led_truck/features/admin/screens/admin_configuracoes_screen.dart';
+import 'package:led_truck/features/admin/screens/admin_franqueados_screen.dart';
+import 'package:led_truck/features/admin/screens/admin_usuarios_screen.dart';
 import 'package:led_truck/features/franqueado/screens/franqueado_dashboard_screen.dart';
 import 'package:led_truck/features/franqueado/screens/franqueado_carros_screen.dart';
 import 'package:led_truck/features/franqueado/screens/franqueado_campanhas_screen.dart';
@@ -75,16 +76,20 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const RastreamentoScreen(),
       ),
       GoRoute(
+        path: '/admin/franqueados',
+        builder: (context, state) => const AdminFranqueadosScreen(),
+      ),
+      GoRoute(
         path: '/admin/relatorios',
         builder: (context, state) => const AdminRelatoriosScreen(),
       ),
       GoRoute(
-        path: '/admin/integracoes',
-        builder: (context, state) => const AdminIntegracoesScreen(),
-      ),
-      GoRoute(
         path: '/admin/configuracoes',
         builder: (context, state) => const AdminConfiguracoesScreen(),
+      ),
+      GoRoute(
+        path: '/admin/usuarios',
+        builder: (context, state) => const AdminUsuariosScreen(),
       ),
       GoRoute(
         path: '/franqueado/dashboard',

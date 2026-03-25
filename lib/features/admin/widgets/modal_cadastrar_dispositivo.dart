@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:led_truck/features/shared/widgets/base_components.dart';
 import 'package:led_truck/features/admin/models/dispositivo_model.dart';
 import 'package:led_truck/features/admin/providers/dispositivos_provider.dart';
+
 class ModalCadastrarDispositivo extends ConsumerStatefulWidget {
   const ModalCadastrarDispositivo({super.key});
 
@@ -15,7 +16,6 @@ class _ModalCadastrarDispositivoState extends ConsumerState<ModalCadastrarDispos
   final _modeloController = TextEditingController(text: 'ESP32 DevKit v1');
   final _firmwareController = TextEditingController(text: '1.0.0');
   
-  // Logic to generate next serial LT-2025-000X mock
   String _serialMock = "LT-2025-0004";
 
   @override
@@ -48,45 +48,47 @@ class _ModalCadastrarDispositivoState extends ConsumerState<ModalCadastrarDispos
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 24, left: 24, right: 24, top: 24),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom + 24, 
+        left: 24, right: 24, top: 24
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Cadastrar Dispositivo", style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Cadastrar Dispositivo", style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: 20, fontWeight: FontWeight.bold)),
+              IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+            ],
+          ),
           const SizedBox(height: 24),
-          const _FieldLabel("Número de Série (Automático)"),
-          AppTextField(label: '', hint: _serialMock, controller: TextEditingController(text: _serialMock)),
-          const SizedBox(height: 16),
-          const _FieldLabel("Endereço MAC"),
-          AppTextField(label: '', hint: "Ex: AA:BB:CC:11:22:33", controller: _macController),
-          const SizedBox(height: 16),
-          const _FieldLabel("Modelo"),
-          AppTextField(label: '', hint: "Modelo", controller: _modeloController),
-          const SizedBox(height: 16),
-          const _FieldLabel("Versão do Firmware"),
-          AppTextField(label: '', hint: "Versão", controller: _firmwareController),
+          AbsorbPointer(child: AppTextField(label: "Número de Série (Automático)", icon: Icons.tag, hint: _serialMock, controller: TextEditingController(text: _serialMock))),
+          const SizedBox(height: 8),
+          AppTextField(label: "Endereço MAC", icon: Icons.router, hint: "Ex: AA:BB:CC:11:22:33", controller: _macController),
+          const SizedBox(height: 8),
+          AppTextField(label: "Modelo", icon: Icons.memory, hint: "Modelo", controller: _modeloController),
+          const SizedBox(height: 8),
+          AppTextField(label: "Versão do Firmware", icon: Icons.system_update, hint: "Versão", controller: _firmwareController),
+          const SizedBox(height: 8),
+          AbsorbPointer(child: AppTextField(label: "Status inicial", icon: Icons.inventory_2, controller: TextEditingController(text: 'Estoque'))),
           const SizedBox(height: 32),
           SizedBox(
             width: double.infinity,
-            child: AppButton(label: "Salvar no Estoque", onPressed: _onSave),
+            height: 50,
+            child: ElevatedButton(
+              onPressed: _onSave,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF00E87A),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+              ),
+              child: const Text("Salvar no Estoque", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
           ),
-          const SizedBox(height: 24),
         ],
       ),
-    );
-  }
-}
-
-class _FieldLabel extends StatelessWidget {
-  final String label;
-  const _FieldLabel(this.label);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Text(label, style: const TextStyle(color: Color(0xFF7A7A9A), fontSize: 12)),
     );
   }
 }

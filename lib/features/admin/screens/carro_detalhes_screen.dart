@@ -127,7 +127,7 @@ class _CarroDetalhesScreenState extends ConsumerState<CarroDetalhesScreen> {
                       DataColumn(label: Text("Localização", style: Theme.of(context).textTheme.bodySmall)),
                     ],
                     rows: List.generate(5, (i) => DataRow(cells: [
-                      DataCell(Text("24/03/2026 14:20:11", style: Theme.of(context).textTheme.bodyMedium)),
+                      DataCell(Text("24/03/2026 14:20", style: Theme.of(context).textTheme.bodyMedium)),
                       DataCell(Text(i % 2 == 0 ? "LIGOU" : "DESLIGOU", style: TextStyle(color: i % 2 == 0 ? Colors.green : Colors.red, fontWeight: FontWeight.bold, fontSize: 13))),
                       DataCell(Text("4h 12m", style: Theme.of(context).textTheme.bodyMedium)),
                       DataCell(Text("Av. Paulista, 1000", style: Theme.of(context).textTheme.bodyMedium)),

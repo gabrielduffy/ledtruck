@@ -141,6 +141,14 @@ class _AdminConfiguracoesScreenState extends ConsumerState<AdminConfiguracoesScr
                   [],
                   disabled: true
                 ),
+                _buildIntegracaoCard(
+                  "Asaas Pagamentos",
+                  "Geração automática de cobranças para franqueados e gestão de faturas.",
+                  Icons.payments,
+                  false,
+                  [],
+                  disabled: true
+                ),
               ],
             );
           }),
@@ -403,10 +411,10 @@ class _AdminConfiguracoesScreenState extends ConsumerState<AdminConfiguracoesScr
                   DataColumn(label: Text("Ações")),
                 ],
                 rows: [
-                  _logRow("2026-03-24 23:01:05", "Relatório Env", "WhatsApp", "sucesso", "Enviado a 551199999999", Colors.green, Icons.chat),
-                  _logRow("2026-03-24 23:00:10", "Relatório Env", "E-mail", "sucesso", "Enviado a user@test.com", Colors.blue, Icons.email),
-                  _logRow("2026-03-24 18:30:00", "Sem Sinal", "WhatsApp", "falha", "Timeout API Z-API", Colors.red, Icons.chat),
-                  _logRow("2026-03-24 14:20:11", "Painel Ligou", "Sistema", "sucesso", "Trigger acionada", Colors.grey, Icons.settings),
+                  _logRow("24/03/2026 23:01", "Relatório Env", "WhatsApp", "sucesso", "Enviado a 551199999999", Colors.green, Icons.chat),
+                  _logRow("24/03/2026 23:00", "Relatório Env", "E-mail", "sucesso", "Enviado a user@test.com", Colors.blue, Icons.email),
+                  _logRow("24/03/2026 18:30", "Sem Sinal", "WhatsApp", "falha", "Timeout API Z-API", Colors.red, Icons.chat),
+                  _logRow("24/03/2026 14:20", "Painel Ligou", "Sistema", "sucesso", "Trigger acionada", Colors.grey, Icons.settings),
                 ],
               ),
             ),
@@ -429,10 +437,18 @@ class _AdminConfiguracoesScreenState extends ConsumerState<AdminConfiguracoesScr
       DataCell(Text(msg)),
       DataCell(TextButton(
         onPressed: () {
+          String payloadJSON = '{\n  "event": "update",\n  "table": "eventos"\n}';
+          if (tipo == 'Relatório Env') {
+            payloadJSON = '{\n  "destinatario": "joao@ledtruck.com",\n  "template": "relatorio_diario",\n  "status": "enviado",\n  "timestamp": "24/03/2026 23:01"\n}';
+          } else if (tipo == 'Sem Sinal') {
+            payloadJSON = '{\n  "dispositivo": "LT-2025-0003",\n  "ultima_leitura": "24/03/2026 18:30",\n  "tentativas": 3\n}';
+          } else if (tipo == 'Painel Ligou') {
+            payloadJSON = '{\n  "carro_id": "TRK-001",\n  "tipo": "ligou",\n  "latitude": -23.5505,\n  "longitude": -46.6333\n}';
+          }
           showDialog(context: context, builder: (_) => AlertDialog(
             backgroundColor: Theme.of(context).cardColor,
             title: const Text("Payload JSON"),
-            content: SelectableText('{\n  "event": "update",\n  "table": "eventos"\n}', style: TextStyle(fontFamily: 'Courier', color: AppTheme.primaryNeon)),
+            content: SelectableText(payloadJSON, style: TextStyle(fontFamily: 'Courier', color: AppTheme.primaryNeon)),
             actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text("Fechar"))]
           ));
         },

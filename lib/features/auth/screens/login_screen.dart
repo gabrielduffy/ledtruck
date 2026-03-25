@@ -201,7 +201,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     const SizedBox(height: 16),
                     
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(context: context, builder: (_) => AlertDialog(
+                          backgroundColor: Theme.of(context).cardColor,
+                          title: Text("Recuperar Senha", style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color)),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text("Digite o seu e-mail abaixo para receber o link de recuperação.", style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color)),
+                              const SizedBox(height: 16),
+                              const AppTextField(label: "E-mail", hint: "seu@email.com", icon: Icons.email),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancelar", style: TextStyle(color: Colors.grey))),
+                            AppButton(label: "Enviar link", onPressed: () {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Link de recuperação enviado para seu e-mail!"), backgroundColor: AppTheme.primaryNeon));
+                            }),
+                          ],
+                        ));
+                      },
                       child: Text(
                         "Esqueci minha senha",
                         style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5)),

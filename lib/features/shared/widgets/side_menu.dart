@@ -56,7 +56,7 @@ class SideMenu extends ConsumerWidget {
                   _MenuTile(label: "Rastreamento", icon: Icons.map_outlined, path: "/admin/rastreamento", isSelected: currentPath.contains("/rastreamento")),
                   _MenuTile(label: "Franqueados", icon: Icons.business_outlined, path: "/admin/franqueados", isSelected: currentPath == "/admin/franqueados"),
                   _MenuTile(label: "Relatórios", icon: Icons.bar_chart_outlined, path: "/admin/relatorios", isSelected: currentPath == "/admin/relatorios"),
-                  _MenuTile(label: "Integrações", icon: Icons.sync_alt_outlined, path: "/admin/integracoes", isSelected: currentPath == "/admin/integracoes"),
+                  _MenuTile(label: "Usuários", icon: Icons.people_outline, path: "/admin/usuarios", isSelected: currentPath == "/admin/usuarios"),
                   _MenuTile(label: "Configurações", icon: Icons.settings_outlined, path: "/admin/configuracoes", isSelected: currentPath == "/admin/configuracoes"),
                 ] else if (role == 'franqueado') ...[
                   _MenuTile(label: "Dashboard", icon: Icons.dashboard_outlined, path: "/franqueado/dashboard", isSelected: currentPath == "/franqueado/dashboard"),
@@ -94,12 +94,12 @@ class SideMenu extends ConsumerWidget {
                     children: [
                       Text(
                         profile?.nome ?? "Usuário",
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color, fontWeight: FontWeight.bold),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         role.toUpperCase(),
-                        style: const TextStyle(color: Color(0xFF7A7A9A), fontSize: 10),
+                        style: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color, fontSize: 10),
                       ),
                     ],
                   ),

@@ -12,6 +12,7 @@ import 'package:led_truck/core/theme/app_theme.dart';
 import 'package:led_truck/core/theme/theme_provider.dart';
 import 'package:led_truck/features/admin/providers/admin_provider.dart';
 import 'package:led_truck/features/admin/models/admin_models.dart';
+import 'package:led_truck/core/utils/date_formatter.dart';
 
 class AdminDashboard extends ConsumerWidget {
   const AdminDashboard({super.key});
@@ -285,6 +286,77 @@ class _FranqueadosTable extends StatelessWidget {
   final List<AdminFranqueado> franqueados;
   const _FranqueadosTable({required this.franqueados});
 
+  void _openFranqueadoDrawer(BuildContext context, AdminFranqueado f) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: "Fechar",
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, anim1, anim2) {
+        return Align(
+          alignment: Alignment.centerRight,
+          child: Material(
+            elevation: 16,
+            color: Theme.of(context).cardColor,
+            child: SizedBox(
+              width: 400,
+              height: double.infinity,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Detalhes do Franqueado", style: Theme.of(context).textTheme.headlineMedium),
+                        IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    Text(f.nome, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    Text("${f.cidade} / ${f.estado}", style: const TextStyle(color: Colors.grey)),
+                    const SizedBox(height: 32),
+                    const Text("Métricas", style: TextStyle(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 16),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Horas Exibidas Hoje:"), Text("24h", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold))
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Carros Ativos:"), Text("${f.carrosAtivos} / ${f.carrosAtivos+2}", style: const TextStyle(fontWeight: FontWeight.bold))
+                      ],
+                    ),
+                    const SizedBox(height: 32),
+                    const Text("Carros", style: TextStyle(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    const ListTile(leading: Icon(Icons.directions_car), title: Text("Fiorino - ABC-1234"), subtitle: Text("Online")),
+                    const ListTile(leading: Icon(Icons.directions_car), title: Text("Kombi - XYZ-9876"), subtitle: Text("Offline")),
+                    const SizedBox(height: 32),
+                    const Text("Campanhas Ativas", style: TextStyle(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    const ListTile(leading: Icon(Icons.campaign), title: Text("Coca-Cola"), subtitle: Text("Até 31/03")),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+          position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero).animate(anim1),
+          child: child,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -324,7 +396,7 @@ class _FranqueadosTable extends StatelessWidget {
                     DataCell(Text("${f.cidade}/${f.estado}", style: Theme.of(context).textTheme.bodyMedium)),
                     DataCell(Text("${f.carrosAtivos}", style: Theme.of(context).textTheme.bodyMedium)),
                     DataCell(Text("${f.campanhasAtivas}", style: Theme.of(context).textTheme.bodyMedium)),
-                    DataCell(TextButton(onPressed: () {}, child: const Text("Ver Detalhes", style: TextStyle(color: AppTheme.primaryNeon)))),
+                    DataCell(TextButton(onPressed: () => _openFranqueadoDrawer(context, f), child: const Text("Ver Detalhes", style: TextStyle(color: AppTheme.primaryNeon)))),
                   ],
                 )).toList(),
               ),
@@ -392,6 +464,6 @@ class _EventsFeed extends StatelessWidget {
   }
 
   String _formatTime(DateTime dt) {
-    return "${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}";
+    return DateFormatter.time(dt);
   }
 }
