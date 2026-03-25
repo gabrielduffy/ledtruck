@@ -354,8 +354,10 @@ class _AdminFinanceiroScreenState extends ConsumerState<AdminFinanceiroScreen> w
                   TextButton.icon(
                     onPressed: () {
                       ExportUtils.exportarCSV(
-                        ['Mês', 'Valor Arrecadado'],
-                        [['Out', _formatCurrency(1200)], ['Nov', _formatCurrency(1400)], ['Dez', _formatCurrency(2100)], ['Jan', _formatCurrency(1800)], ['Fev', _formatCurrency(1491)], ['Mar', _formatCurrency(994)]],
+                        [
+                          ['Mês', 'Valor Arrecadado'],
+                          ['Out', _formatCurrency(1200)], ['Nov', _formatCurrency(1400)], ['Dez', _formatCurrency(2100)], ['Jan', _formatCurrency(1800)], ['Fev', _formatCurrency(1491)], ['Mar', _formatCurrency(994)]
+                        ],
                         "relatorio_financeiro"
                       );
                     },
